@@ -7,7 +7,7 @@
             "label": "Tests",
             "type": "shell",
             "command": "mvn",
-            "args": ["test"],
+            "args": ["clean", "test"],
             "problemMatcher": []
         }
     ]

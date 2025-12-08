@@ -1,0 +1,50 @@
+package fuun;
+
+import java.util.ArrayList;
+
+import fuun.stringdna.StringDNA;
+
+public final class Utils {
+    private Utils() {
+    }
+
+    private static final int MAX_LOOP_COUNT = 10_000_000;
+
+    public static DNA createDNA() {
+        return new StringDNA();
+    }
+
+    public static DNA createDNA(Base[] bases) {
+        var dna = createDNA();
+
+        dna.append(bases);
+
+        return dna;
+    }
+
+    public static Base[] stringToBases(String input) {
+        var bases = new ArrayList<Base>();
+
+        for (var ch : input.toCharArray()) {
+            if (ch == 'I') {
+                bases.add(Base.I);
+            } else if (ch == 'C') {
+                bases.add(Base.C);
+            } else if (ch == 'F') {
+                bases.add(Base.F);
+            } else if (ch == 'P') {
+                bases.add(Base.P);
+            } else {
+                throw new RuntimeException("stringToBases invalid char: " + ch);
+            }
+        }
+
+        return bases.toArray(new Base[bases.size()]);
+    }
+
+    public static void checkLoopCount(String label, int count) {
+        if (count >= MAX_LOOP_COUNT) {
+            throw new RuntimeException(label + ": Infinite loop detected");
+        }
+    }
+}

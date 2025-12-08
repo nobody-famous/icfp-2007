@@ -3,30 +3,59 @@ package fuun.dna;
 import java.util.ArrayList;
 import java.util.List;
 
-import fuun.DNACursor;
-
 public class Pattern {
-    public static sealed interface Item permits Base, Skip, Search {
+    public static sealed interface Item permits Base, Skip, Search, Open, Close {
     }
 
-    public static record Base(char base) implements Item {
+    public static record Base(fuun.Base base) implements Item {
+        @Override
+        public final String toString() {
+            return "" + base;
+        }
     }
 
     public static record Skip(int offset) implements Item {
+        @Override
+        public final String toString() {
+            return "!" + offset;
+        }
     }
 
     public static record Search(String srch) implements Item {
+        @Override
+        public final String toString() {
+            return "<" + srch + ">";
+        }
     }
 
-    private DNACursor cursor;
-
-    public Pattern(DNACursor cursor) {
-        this.cursor = cursor;
+    public static record Open() implements Item {
+        @Override
+        public final String toString() {
+            return "(";
+        }
     }
 
-    public List<Item> decode() {
-        var items = new ArrayList<Item>();
+    public static record Close() implements Item {
+        @Override
+        public final String toString() {
+            return ")";
+        }
+    }
 
-        return items;
+    private List<Item> items = new ArrayList<>();
+
+    public void add(Item item) {
+        items.add(item);
+    }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+
+        for (Item item : items) {
+            builder.append(item);
+        }
+
+        return builder.toString();
     }
 }
