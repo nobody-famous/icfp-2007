@@ -30,23 +30,29 @@ public class PatternDecoder extends Decoder {
 
     private void handlePrefix(Prefix prefix) throws Finished {
         switch (prefix) {
-            case Prefix.I:
-                break;
             case Prefix.C:
+                pattern.add(new Pattern.Base(fuun.Base.I));
                 break;
             case Prefix.F:
+                pattern.add(new Pattern.Base(fuun.Base.C));
                 break;
             case Prefix.P:
+                pattern.add(new Pattern.Base(fuun.Base.F));
                 break;
             case Prefix.IC:
+                pattern.add(new Pattern.Base(fuun.Base.P));
                 break;
             case Prefix.IF:
                 break;
             case Prefix.IP:
                 break;
             case Prefix.IIC:
-                break;
             case Prefix.IIF:
+                if (level == 0) {
+                    done = true;
+                } else {
+                    throw new RuntimeException("IIC/F level > 0 not handled");
+                }
                 break;
             case Prefix.IIP:
                 break;

@@ -4,7 +4,7 @@ import fuun.DNACursor;
 
 abstract class Decoder {
     enum Prefix {
-        I, C, F, P, IC, IF, IP, IIC, IIF, IIP, III, None
+        C, F, P, IC, IF, IP, IIC, IIF, IIP, III, None
     }
 
     protected Prefix parsePrefix(DNACursor cursor) {

@@ -15,6 +15,6 @@ public class PatternDecorderTest {
 
     @Test
     public void basesTest() throws Exception {
-        runTest("CFPIC", "ICFP");
+        runTest("CFPICIIC", "ICFP");
     }
 }
