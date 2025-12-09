@@ -11,12 +11,37 @@ abstract class Decoder<T> {
         C, F, P, IC, IF, IP, IIC, IIF, IIP, III, None
     }
 
-    public abstract T decode(DNACursor cursor) throws Finished;
-
     private List<fuun.Base[]> rna = new ArrayList<>();
+    private boolean done = false;
+    T result;
+
+    abstract void handlePrefix(DNACursor cursor, Prefix prefix) throws Finished;
+
+    abstract void reset();
 
     public List<fuun.Base[]> getRNA() {
         return rna;
+    }
+
+    public T decode(DNACursor cursor) throws Finished {
+        rna = new ArrayList<>();
+        done = false;
+        reset();
+
+        var loopCount = 0;
+
+        while (!done) {
+            fuun.Utils.checkLoopCount("PatternDecoder.decode", loopCount++);
+
+            var prefix = parsePrefix(cursor);
+            handlePrefix(cursor, prefix);
+        }
+
+        return result;
+    }
+
+    protected void setDone(boolean value) {
+        done = value;
     }
 
     protected int nat(DNACursor cursor) {

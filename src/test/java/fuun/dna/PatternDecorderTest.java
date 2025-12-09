@@ -1,16 +1,11 @@
 package fuun.dna;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
-
-import fuun.Finished;
 
 public class PatternDecorderTest extends DecoderTest<Pattern> {
     @Test
     public void basesTest() throws Exception {
-        assertThrows(Finished.class, () -> runTest(new PatternDecoder(), "CFPIC", "ICFP"));
-        runTest(new PatternDecoder(), "CFPICIIC", "ICFP");
+        testBases(new PatternDecoder());
     }
 
     @Test

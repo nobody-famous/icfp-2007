@@ -1,9 +1,12 @@
 package fuun.dna;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import fuun.Finished;
 
 abstract class DecoderTest<T> {
-    protected void runTest(Decoder<T> decoder, String startDNA, String expected) throws Exception {
+    void runTest(Decoder<T> decoder, String startDNA, String expected) throws Exception {
         var dna = fuun.Utils.createDNA(fuun.Utils.stringToBases(startDNA));
         var cursor = dna.getCursor();
         var pattern = decoder.decode(cursor);
@@ -11,7 +14,12 @@ abstract class DecoderTest<T> {
         assertEquals(expected, pattern.toString());
     }
 
-    protected void testRNA(Decoder<T> decoder) throws Exception {
+    void testBases(Decoder<T> decoder) throws Exception {
+        assertThrows(Finished.class, () -> runTest(decoder, "CFPIC", "ICFP"));
+        runTest(decoder, "CFPICIIC", "ICFP");
+    }
+
+    void testRNA(Decoder<T> decoder) throws Exception {
         runTest(decoder, "IIIIIIIIIIIIICCCCCCCIIIFFFFFFFIIIPPPPPPPIIC", "");
         assertEquals(4, decoder.getRNA().size());
         assertEquals("IIIIIII", fuun.Utils.basesToString(decoder.getRNA().get(0)));
