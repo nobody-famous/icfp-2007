@@ -21,10 +21,16 @@ public class Pattern {
         }
     }
 
-    public static record Search(String srch) implements Item {
+    public static record Search(fuun.Base[] srch) implements Item {
         @Override
         public final String toString() {
-            return "<" + srch + ">";
+            var builder = new StringBuilder();
+
+            for (var base : srch) {
+                builder.append(base);
+            }
+
+            return "<" + builder.toString() + ">";
         }
     }
 

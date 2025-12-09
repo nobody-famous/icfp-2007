@@ -42,6 +42,16 @@ public final class Utils {
         return bases.toArray(new Base[bases.size()]);
     }
 
+    public static String basesToString(Base[] bases) {
+        var builder = new StringBuilder();
+
+        for (var base : bases) {
+            builder.append(base);
+        }
+
+        return builder.toString();
+    }
+
     public static void checkLoopCount(String label, int count) {
         if (count >= MAX_LOOP_COUNT) {
             throw new RuntimeException(label + ": Infinite loop detected");

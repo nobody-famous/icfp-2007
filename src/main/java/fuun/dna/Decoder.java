@@ -1,10 +1,87 @@
 package fuun.dna;
 
-import fuun.DNACursor;
+import java.util.ArrayList;
+import java.util.List;
 
-abstract class Decoder {
+import fuun.DNACursor;
+import fuun.Finished;
+
+abstract class Decoder<T> {
     enum Prefix {
         C, F, P, IC, IF, IP, IIC, IIF, IIP, III, None
+    }
+
+    public abstract T decode(DNACursor cursor) throws Finished;
+
+    private List<fuun.Base[]> rna = new ArrayList<>();
+
+    public List<fuun.Base[]> getRNA() {
+        return rna;
+    }
+
+    protected int nat(DNACursor cursor) {
+        var result = 0;
+        var base = 1;
+        var loopCount = 0;
+
+        for (var item = cursor.next(); item != fuun.Base.None && item != fuun.Base.P; item = cursor.next()) {
+            fuun.Utils.checkLoopCount("nat", loopCount++);
+
+            if (item == fuun.Base.C) {
+                result += base;
+            }
+
+            base *= 2;
+        }
+
+        return result;
+    }
+
+    protected fuun.Base[] consts(DNACursor cursor) {
+        var result = new ArrayList<fuun.Base>();
+        var loopCount = 0;
+        var done = false;
+
+        for (var item = cursor.peek(); !done; item = cursor.peek()) {
+            fuun.Utils.checkLoopCount("consts", loopCount++);
+
+            switch (item) {
+                case fuun.Base.C:
+                    result.add(fuun.Base.I);
+                    cursor.skip(1);
+                    break;
+                case fuun.Base.F:
+                    result.add(fuun.Base.C);
+                    cursor.skip(1);
+                    break;
+                case fuun.Base.P:
+                    result.add(fuun.Base.F);
+                    cursor.skip(1);
+                    break;
+                case fuun.Base.I:
+                    if (cursor.peek(1) == fuun.Base.C) {
+                        result.add(fuun.Base.P);
+                        cursor.skip(2);
+                    } else {
+                        done = true;
+                    }
+                case fuun.Base.None:
+                    done = true;
+                    break;
+            }
+        }
+
+        return result.toArray(new fuun.Base[result.size()]);
+    }
+
+    protected void extractRNA(DNACursor cursor) {
+        var item = new fuun.Base[7];
+
+        for (var index = 0; index < item.length; index += 1) {
+            item[index] = cursor.next();
+        }
+
+        rna.add(item);
     }
 
     protected Prefix parsePrefix(DNACursor cursor) {
@@ -12,7 +89,7 @@ abstract class Decoder {
     }
 
     private Prefix stepII(DNACursor cursor) {
-        switch (cursor.Next()) {
+        switch (cursor.next()) {
             case fuun.Base.C:
                 return Prefix.IIC;
             case fuun.Base.F:
@@ -29,7 +106,7 @@ abstract class Decoder {
     }
 
     private Prefix stepI(DNACursor cursor) {
-        switch (cursor.Next()) {
+        switch (cursor.next()) {
             case fuun.Base.C:
                 return Prefix.IC;
             case fuun.Base.F:
@@ -46,7 +123,7 @@ abstract class Decoder {
     }
 
     private Prefix step(DNACursor cursor) {
-        switch (cursor.Next()) {
+        switch (cursor.next()) {
             case fuun.Base.C:
                 return Prefix.C;
             case fuun.Base.F:

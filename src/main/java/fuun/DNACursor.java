@@ -1,5 +1,11 @@
 package fuun;
 
 public interface DNACursor {
-    Base Next();
+    Base peek();
+
+    Base peek(int offset);
+
+    Base next();
+
+    void skip(int offset);
 }

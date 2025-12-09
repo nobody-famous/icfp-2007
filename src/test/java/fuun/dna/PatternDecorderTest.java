@@ -1,24 +1,37 @@
 package fuun.dna;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
 import fuun.Finished;
 
-public class PatternDecorderTest {
-    private void runTest(String startDNA, String expected) throws Exception {
-        var dna = fuun.Utils.createDNA(fuun.Utils.stringToBases(startDNA));
-        var cursor = dna.getCursor();
-        var pattern = new PatternDecoder(cursor).decode();
-
-        assertEquals(expected, pattern.toString());
+public class PatternDecorderTest extends DecoderTest<Pattern> {
+    @Test
+    public void basesTest() throws Exception {
+        assertThrows(Finished.class, () -> runTest(new PatternDecoder(), "CFPIC", "ICFP"));
+        runTest(new PatternDecoder(), "CFPICIIC", "ICFP");
     }
 
     @Test
-    public void basesTest() throws Exception {
-        assertThrows(Finished.class, () -> runTest("CFPIC", "ICFP"));
-        runTest("CFPICIIC", "ICFP");
+    public void searchTest() throws Exception {
+        runTest(new PatternDecoder(), "IFFCFPICIIC", "<ICFP>");
+    }
+
+    @Test
+    public void skipTest() throws Exception {
+        runTest(new PatternDecoder(), "IPCICPIIC", "!5");
+        runTest(new PatternDecoder(), "IPPIIF", "!0");
+    }
+
+    @Test
+    public void captureTest() throws Exception {
+        runTest(new PatternDecoder(), "IIPIPPIICIIC", "(!0)");
+        runTest(new PatternDecoder(), "IIPIPICPIIPIPCCPIICIPIICPIICIIF", "(!2(!3)!4)");
+    }
+
+    @Test
+    public void rnaTest() throws Exception {
+        testRNA(new PatternDecoder());
     }
 }

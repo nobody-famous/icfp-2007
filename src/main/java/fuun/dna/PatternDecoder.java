@@ -3,32 +3,32 @@ package fuun.dna;
 import fuun.DNACursor;
 import fuun.Finished;
 
-public class PatternDecoder extends Decoder {
-    private DNACursor cursor;
+public class PatternDecoder extends Decoder<Pattern> {
     private int level;
     private Pattern pattern;
     private boolean done;
 
-    public PatternDecoder(DNACursor cursor) {
-        this.cursor = cursor;
+    public PatternDecoder() {
         this.pattern = new Pattern();
         this.level = 0;
         this.done = false;
     }
 
-    public Pattern decode() throws Finished {
+    @Override
+    public Pattern decode(DNACursor cursor) throws Finished {
         var loopCount = 0;
 
         while (!done) {
             fuun.Utils.checkLoopCount("PatternDecoder.decode", loopCount++);
 
-            handlePrefix(parsePrefix(cursor));
+            var prefix = parsePrefix(cursor);
+            handlePrefix(cursor, prefix);
         }
 
         return pattern;
     }
 
-    private void handlePrefix(Prefix prefix) throws Finished {
+    private void handlePrefix(DNACursor cursor, Prefix prefix) throws Finished {
         switch (prefix) {
             case Prefix.C:
                 pattern.add(new Pattern.Base(fuun.Base.I));
@@ -43,20 +43,27 @@ public class PatternDecoder extends Decoder {
                 pattern.add(new Pattern.Base(fuun.Base.P));
                 break;
             case Prefix.IF:
+                cursor.skip(1);
+                pattern.add(new Pattern.Search(consts(cursor)));
                 break;
             case Prefix.IP:
+                pattern.add(new Pattern.Skip(nat(cursor)));
                 break;
             case Prefix.IIC:
             case Prefix.IIF:
                 if (level == 0) {
                     done = true;
                 } else {
-                    throw new RuntimeException("IIC/F level > 0 not handled");
+                    level -= 1;
+                    pattern.add(new Pattern.Close());
                 }
                 break;
             case Prefix.IIP:
+                level += 1;
+                pattern.add(new Pattern.Open());
                 break;
             case Prefix.III:
+                extractRNA(cursor);
                 break;
             default:
                 throw new Finished();
