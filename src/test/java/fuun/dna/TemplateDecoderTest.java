@@ -16,6 +16,11 @@ public class TemplateDecoderTest extends DecoderTest<Template> {
     }
 
     @Test
+    public void lengthTest() throws Exception {
+        runTest(new TemplateDecoder(), "IIPCCPIIC", "|3|");
+    }
+
+    @Test
     public void rnaTest() throws Exception {
         testRNA(new TemplateDecoder());
     }

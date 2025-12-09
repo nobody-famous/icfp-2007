@@ -36,6 +36,7 @@ public class TemplateDecoder extends Decoder<Template> {
                 setDone(true);
                 break;
             case Prefix.IIP:
+                result.add(new Template.Length(nat(cursor)));
                 break;
             case Prefix.III:
                 extractRNA(cursor);
