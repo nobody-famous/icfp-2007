@@ -21,6 +21,12 @@ public class Matcher {
                         return false;
                     }
                     break;
+                case Pattern.Search searchItem: {
+                    if (!findPostfix(cursor, searchItem.srch())) {
+                        return false;
+                    }
+                    break;
+                }
                 default:
                     break;
             }
@@ -29,5 +35,9 @@ public class Matcher {
         cursor.truncate();
 
         return true;
+    }
+
+    private boolean findPostfix(fuun.DNACursor cursor, fuun.Base[] toFind) {
+        return false;
     }
 }
