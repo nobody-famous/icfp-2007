@@ -9,6 +9,13 @@
             "command": "mvn",
             "args": ["clean", "test"],
             "problemMatcher": []
+        },
+        {
+            "label": "One Test",
+            "type": "shell",
+            "command": "mvn",
+            "args": ["clean", "-Dtest=MatcherTest", "test"],
+            "problemMatcher": []
         }
     ]
 }

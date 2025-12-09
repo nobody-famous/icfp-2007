@@ -50,8 +50,13 @@ public class Pattern {
 
     private List<Item> items = new ArrayList<>();
 
-    public void add(Item item) {
+    public Pattern add(Item item) {
         items.add(item);
+        return this;
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 
     @Override

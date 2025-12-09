@@ -12,6 +12,7 @@ abstract class DecoderTest<T> {
         var pattern = decoder.decode(cursor);
 
         assertEquals(expected, pattern.toString());
+        assertEquals(0, dna.length());
     }
 
     void testBases(Decoder<T> decoder) throws Exception {

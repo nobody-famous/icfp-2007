@@ -8,4 +8,8 @@ public interface DNACursor {
     Base next();
 
     void skip(int offset);
+
+    void truncate();
+
+    boolean isValid();
 }

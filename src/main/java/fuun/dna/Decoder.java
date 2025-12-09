@@ -37,6 +37,8 @@ abstract class Decoder<T> {
             handlePrefix(cursor, prefix);
         }
 
+        cursor.truncate();
+
         return result;
     }
 

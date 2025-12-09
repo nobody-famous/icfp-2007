@@ -10,13 +10,18 @@ public class StringDNA implements DNA {
     public class Cursor implements DNACursor {
         private int index = 0;
 
-        private boolean isValidOffset(int offset) {
+        private boolean isInRange(int offset) {
             return offset >= 0 && offset < bases.length;
         }
 
         @Override
+        public boolean isValid() {
+            return index >= 0 && index <= bases.length;
+        }
+
+        @Override
         public Base next() {
-            return isValidOffset(index)
+            return isInRange(index)
                     ? bases[index++]
                     : Base.None;
         }
@@ -30,7 +35,7 @@ public class StringDNA implements DNA {
         public Base peek(int offset) {
             var newOffset = this.index + offset;
 
-            return isValidOffset(newOffset)
+            return isInRange(newOffset)
                     ? bases[newOffset]
                     : fuun.Base.None;
         }
@@ -40,6 +45,19 @@ public class StringDNA implements DNA {
             index += offset;
         }
 
+        @Override
+        public void truncate() {
+            if (index >= bases.length) {
+                bases = new Base[0];
+                return;
+            }
+
+            var newLength = bases.length - index + 1;
+            var newBases = new Base[newLength];
+
+            System.arraycopy(bases, index, newBases, 0, newLength);
+            bases = newBases;
+        }
     }
 
     @Override
@@ -60,5 +78,16 @@ public class StringDNA implements DNA {
         System.arraycopy(toAppend, 0, newBases, this.bases.length, toAppend.length);
 
         this.bases = newBases;
+    }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+
+        for (var base : bases) {
+            builder.append(base);
+        }
+
+        return builder.toString();
     }
 }
