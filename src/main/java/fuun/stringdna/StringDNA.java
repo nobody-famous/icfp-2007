@@ -52,7 +52,7 @@ public class StringDNA implements DNA {
                 return;
             }
 
-            var newLength = bases.length - index + 1;
+            var newLength = bases.length - index;
             var newBases = new Base[newLength];
 
             System.arraycopy(bases, index, newBases, 0, newLength);
