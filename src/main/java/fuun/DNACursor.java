@@ -1,6 +1,8 @@
 package fuun;
 
 public interface DNACursor {
+    DNACursor copy();
+
     Base peek();
 
     Base peek(int offset);

@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import fuun.Base;
+
 public class MatcherTest {
     private void runTest(String input, Pattern pattern, boolean shouldMatch, String dnaResult,
             List<fuun.DNA> expectedEnv) {
@@ -44,5 +46,17 @@ public class MatcherTest {
         runTest("ICFP", new Pattern().add(new Pattern.Skip(3)), true, "P", new ArrayList<>());
         runTest("ICFP", new Pattern().add(new Pattern.Skip(4)), true, "", new ArrayList<>());
         runTest("ICFP", new Pattern().add(new Pattern.Skip(5)), false, "ICFP", new ArrayList<>());
+    }
+
+    @Test
+    void testSearch() {
+        runTest("ICFP", new Pattern().add(new Pattern.Search(new Base[] { fuun.Base.F, fuun.Base.P })), true, "",
+                new ArrayList<>());
+        runTest("ICFP", new Pattern().add(new Pattern.Search(new Base[] { fuun.Base.I, fuun.Base.C, fuun.Base.F })),
+                true, "P", new ArrayList<>());
+        runTest("ICFP", new Pattern().add(new Pattern.Search(new Base[] { fuun.Base.I })), true, "CFP",
+                new ArrayList<>());
+        runTest("ICFP", new Pattern().add(new Pattern.Search(new Base[] { fuun.Base.F, fuun.Base.F })), false, "ICFP",
+                new ArrayList<>());
     }
 }

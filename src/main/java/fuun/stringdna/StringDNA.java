@@ -15,6 +15,15 @@ public class StringDNA implements DNA {
         }
 
         @Override
+        public DNACursor copy() {
+            var newCursor = new Cursor();
+
+            newCursor.index = this.index;
+
+            return newCursor;
+        }
+
+        @Override
         public boolean isValid() {
             return index >= 0 && index <= bases.length;
         }
