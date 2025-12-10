@@ -8,8 +8,7 @@ import fuun.Finished;
 abstract class DecoderTest<T> {
     void runTest(Decoder<T> decoder, String startDNA, String expected) throws Exception {
         var dna = fuun.Utils.createDNA(fuun.Utils.stringToBases(startDNA));
-        var cursor = dna.getCursor();
-        var pattern = decoder.decode(cursor);
+        var pattern = decoder.decode(dna);
 
         assertEquals(expected, pattern.toString());
         assertEquals(0, dna.length());

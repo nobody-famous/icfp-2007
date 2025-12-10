@@ -16,6 +16,13 @@
             "command": "mvn",
             "args": ["clean", "-Dtest=ReplacerTest", "test"],
             "problemMatcher": []
+        },
+        {
+            "label": "Run App",
+            "type": "shell",
+            "command": "mvn",
+            "args": ["exec:java", "-D'exec.mainClass'=fuun.App","-D'exec.args'=dna/endo.dna"],
+            "problemMatcher": []
         }
     ]
 }

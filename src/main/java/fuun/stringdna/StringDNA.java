@@ -30,9 +30,9 @@ public class StringDNA implements DNA {
 
         @Override
         public Base next() {
-            return isInRange(index)
-                    ? bases[index++]
-                    : Base.None;
+            var base = isInRange(index) ? bases[index] : fuun.Base.None;
+            index += 1;
+            return base;
         }
 
         @Override
@@ -87,6 +87,17 @@ public class StringDNA implements DNA {
         System.arraycopy(toAppend, 0, newBases, this.bases.length, toAppend.length);
 
         this.bases = newBases;
+    }
+
+    @Override
+    public void prepend(DNA dna) {
+        var stringDNA = (StringDNA) dna;
+        var newBases = new fuun.Base[stringDNA.bases.length + bases.length];
+
+        System.arraycopy(stringDNA.bases, 0, newBases, 0, stringDNA.length());
+        System.arraycopy(newBases, stringDNA.length(), bases, 0, bases.length);
+
+        bases = newBases;
     }
 
     @Override

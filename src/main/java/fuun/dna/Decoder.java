@@ -23,11 +23,12 @@ abstract class Decoder<T> {
         return rna;
     }
 
-    public T decode(DNACursor cursor) throws Finished {
+    public T decode(fuun.DNA dna) throws Finished {
         rna = new ArrayList<>();
         done = false;
         reset();
 
+        var cursor = dna.getCursor();
         var loopCount = 0;
 
         while (!done) {
@@ -92,6 +93,7 @@ abstract class Decoder<T> {
                     } else {
                         done = true;
                     }
+                    break;
                 case fuun.Base.None:
                     done = true;
                     break;

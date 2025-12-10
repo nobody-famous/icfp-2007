@@ -14,18 +14,21 @@ public class Matcher {
                     if (cursor.peek() == baseItem.base()) {
                         cursor.skip(1);
                     } else {
+                        System.out.println("***** MATCH BASE FAILED");
                         return false;
                     }
                     break;
                 case Pattern.Skip skipItem:
                     cursor.skip(skipItem.offset());
                     if (!cursor.isValid()) {
+                        System.out.println("***** MATCH SKIP FAILED");
                         return false;
                     }
                     break;
                 case Pattern.Search searchItem: {
                     var newCursor = findPostfix(cursor, searchItem.srch());
                     if (newCursor == cursor) {
+                        System.out.println("***** MATCH SEARCH FAILED");
                         return false;
                     }
                     cursor = newCursor;
@@ -56,7 +59,7 @@ public class Matcher {
 
         while (i + j < toFind.length) {
             if (toFind[i + j] == toFind[j]) {
-                table[i + j] = i;
+                table[i + j] = 1;
                 j += 1;
             } else {
                 if (j == 0) {
@@ -91,7 +94,7 @@ public class Matcher {
                 fuun.Utils.checkLoopCount("findPostfix", innerLoopCount++);
 
                 j += 1;
-                jCursor.skip(1);
+                jCursor.next();
 
                 if (j >= toFind.length) {
                     return jCursor;
@@ -105,7 +108,7 @@ public class Matcher {
                 jCursor = iCursor.copy();
                 jCursor.skip(j);
             } else {
-                iCursor.skip(1);
+                iCursor.next();
                 jCursor = iCursor.copy();
             }
         }

@@ -56,6 +56,18 @@ public final class Utils {
         return builder.toString();
     }
 
+    public static String dnaToString(fuun.DNA dna) {
+        var builder = new StringBuilder();
+        var cursor = dna.getCursor();
+
+        builder.append("(" + dna.length() + ") ");
+        for (var count = 0; count < 20 && cursor.peek() != fuun.Base.None; count += 1) {
+            builder.append(cursor.next());
+        }
+
+        return builder.toString();
+    }
+
     public static void checkLoopCount(String label, int count) {
         if (count >= MAX_LOOP_COUNT) {
             throw new RuntimeException(label + ": Infinite loop detected");
