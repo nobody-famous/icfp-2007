@@ -13,9 +13,9 @@ public class Replacer {
                     result.append(new fuun.Base[] { baseItem.base() });
                     break;
                 case Template.Protect protectItem: {
-                    var toProtect = getEnvItem(env, protectItem.reference());
-                    if (toProtect != null) {
-                        result.append(protect(toProtect, protectItem.level()));
+                    var envItem = getEnvItem(env, protectItem.reference());
+                    if (envItem != null) {
+                        result.append(protect(envItem, protectItem.level()));
                     }
                     break;
                 }
