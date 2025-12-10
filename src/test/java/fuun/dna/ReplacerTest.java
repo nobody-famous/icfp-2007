@@ -23,4 +23,24 @@ public class ReplacerTest {
                 List.of(),
                 "ICFP");
     }
+
+    @Test
+    void testProtect() {
+        runTest(new Template()
+                .add(new Template.Protect(2, 0)),
+                List.of(fuun.Utils.stringToDNA("ICFP")),
+                "");
+        runTest(new Template()
+                .add(new Template.Protect(0, 0)),
+                List.of(fuun.Utils.stringToDNA("ICFP")),
+                "ICFP");
+        runTest(new Template()
+                .add(new Template.Protect(0, 1)),
+                List.of(fuun.Utils.stringToDNA("PCF")),
+                "ICFP");
+        runTest(new Template()
+                .add(new Template.Protect(0, 2)),
+                List.of(fuun.Utils.stringToDNA("FIC")),
+                "ICFP");
+    }
 }
