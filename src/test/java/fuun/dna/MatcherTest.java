@@ -13,9 +13,8 @@ public class MatcherTest {
     private void runTest(String input, Pattern pattern, boolean shouldMatch, String dnaResult,
             List<fuun.DNA> expectedEnv) {
         var dna = fuun.Utils.createDNA(fuun.Utils.stringToBases(input));
-        var matcher = new Matcher();
         var env = new ArrayList<fuun.DNA>();
-        var matched = matcher.match(dna, pattern, env);
+        var matched = new Matcher().match(dna, pattern, env);
 
         assertEquals(matched, shouldMatch);
         assertEquals(dna.toString(), dnaResult);
