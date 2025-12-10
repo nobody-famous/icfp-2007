@@ -43,4 +43,16 @@ public class ReplacerTest {
                 List.of(fuun.Utils.stringToDNA("FIC")),
                 "ICFP");
     }
+
+    @Test
+    void testLength() {
+        runTest(new Template()
+                .add(new Template.Length(0)),
+                List.of(fuun.Utils.stringToDNA("ICFP")),
+                "IICP");
+        runTest(new Template()
+                .add(new Template.Length(2)),
+                List.of(fuun.Utils.stringToDNA("ICFP")),
+                "P");
+    }
 }

@@ -21,10 +21,10 @@ public class Template {
         }
     }
 
-    public static record Length(int length) implements Item {
+    public static record Length(int reference) implements Item {
         @Override
         public final String toString() {
-            return "|" + length + "|";
+            return "|" + reference + "|";
         }
     }
 

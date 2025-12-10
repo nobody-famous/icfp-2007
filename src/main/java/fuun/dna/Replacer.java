@@ -19,6 +19,11 @@ public class Replacer {
                     }
                     break;
                 }
+                case Template.Length lengthItem: {
+                    var envItem = getEnvItem(env, lengthItem.reference());
+                    result.append(asnat(envItem == null ? 0 : envItem.length()));
+                    break;
+                }
                 default:
                     throw new RuntimeException("Unhandled item " + item);
             }
@@ -96,6 +101,24 @@ public class Replacer {
             var index = getProtectIndex(base);
             bases.addAll(List.of(protectLevels[index][level]));
         }
+
+        return bases.toArray(new fuun.Base[bases.size()]);
+    }
+
+    private fuun.Base[] asnat(int num) {
+        var bases = new ArrayList<fuun.Base>();
+
+        while (num > 0) {
+            if ((num & 1) == 1) {
+                bases.add(fuun.Base.C);
+            } else {
+                bases.add(fuun.Base.I);
+            }
+
+            num /= 2;
+        }
+
+        bases.add(fuun.Base.P);
 
         return bases.toArray(new fuun.Base[bases.size()]);
     }
