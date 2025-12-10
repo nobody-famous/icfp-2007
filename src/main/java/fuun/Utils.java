@@ -42,6 +42,10 @@ public final class Utils {
         return bases.toArray(new Base[bases.size()]);
     }
 
+    public static DNA stringToDNA(String input) {
+        return createDNA(stringToBases(input));
+    }
+
     public static String basesToString(Base[] bases) {
         var builder = new StringBuilder();
 

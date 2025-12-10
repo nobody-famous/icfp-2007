@@ -5,5 +5,7 @@ public interface DNA {
 
     void append(fuun.Base[] bases);
 
+    DNA slice(DNACursor start, DNACursor end);
+
     DNACursor getCursor();
 }

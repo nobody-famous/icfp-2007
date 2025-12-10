@@ -1,10 +1,12 @@
 package fuun.dna;
 
 import java.util.List;
+import java.util.Stack;
 
 public class Matcher {
     public boolean match(fuun.DNA dna, fuun.dna.Pattern pattern, List<fuun.DNA> env) {
         var cursor = dna.getCursor();
+        var cursorStack = new Stack<fuun.DNACursor>();
 
         for (var item : pattern.getItems()) {
             switch (item) {
@@ -29,6 +31,12 @@ public class Matcher {
                     cursor = newCursor;
                     break;
                 }
+                case Pattern.Open openItem:
+                    cursorStack.push(cursor.copy());
+                    break;
+                case Pattern.Close closeItem:
+                    env.add(dna.slice(cursorStack.pop(), cursor));
+                    break;
                 default:
                     break;
             }

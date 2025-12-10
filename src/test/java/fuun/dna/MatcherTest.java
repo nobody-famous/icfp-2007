@@ -1,6 +1,7 @@
 package fuun.dna;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,15 @@ public class MatcherTest {
             List<fuun.DNA> expectedEnv) {
         var dna = fuun.Utils.createDNA(fuun.Utils.stringToBases(input));
         var matcher = new Matcher();
-        var matched = matcher.match(dna, pattern, expectedEnv);
+        var env = new ArrayList<fuun.DNA>();
+        var matched = matcher.match(dna, pattern, env);
 
         assertEquals(matched, shouldMatch);
         assertEquals(dna.toString(), dnaResult);
+        assertEquals(expectedEnv.size(), env.size());
+        for (var index = 0; index < env.size(); index += 1) {
+            assertEquals(expectedEnv.get(index).toString(), env.get(index).toString());
+        }
     }
 
     @Test
@@ -58,5 +64,15 @@ public class MatcherTest {
                 new ArrayList<>());
         runTest("ICFP", new Pattern().add(new Pattern.Search(new Base[] { fuun.Base.F, fuun.Base.F })), false, "ICFP",
                 new ArrayList<>());
+    }
+
+    @Test
+    void testEnv() {
+        runTest("ICFP", new Pattern().add(new Pattern.Open()).add(new Pattern.Skip(1)).add(new Pattern.Close()), true,
+                "CFP", List.of(fuun.Utils.stringToDNA("I")));
+        runTest("ICFP",
+                new Pattern().add(new Pattern.Skip(1)).add(new Pattern.Open()).add(new Pattern.Skip(2))
+                        .add(new Pattern.Close()),
+                true, "P", List.of(fuun.Utils.stringToDNA("CF")));
     }
 }

@@ -90,6 +90,21 @@ public class StringDNA implements DNA {
     }
 
     @Override
+    public DNA slice(DNACursor start, DNACursor end) {
+        var startCursor = (Cursor) start;
+        var endCursor = (Cursor) end;
+        var length = endCursor.index - startCursor.index;
+        var newBases = new Base[length];
+
+        System.arraycopy(bases, startCursor.index, newBases, 0, length);
+
+        var dna = new StringDNA();
+        dna.bases = newBases;
+
+        return dna;
+    }
+
+    @Override
     public String toString() {
         var builder = new StringBuilder();
 
