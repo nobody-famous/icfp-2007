@@ -42,7 +42,9 @@ public class Matcher {
             }
         }
 
+        System.out.println("***** BEFORE " + dna.length());
         cursor.truncate();
+        System.out.println("***** AFTER " + dna.length());
 
         return true;
     }

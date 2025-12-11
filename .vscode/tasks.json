@@ -14,7 +14,7 @@
             "label": "One Test",
             "type": "shell",
             "command": "mvn",
-            "args": ["clean", "-Dtest=MatcherTest", "test"],
+            "args": ["clean", "-Dtest=MatcherTest#testEnv", "test"],
             "problemMatcher": []
         },
         {

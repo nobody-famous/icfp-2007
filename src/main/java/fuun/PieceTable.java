@@ -64,6 +64,7 @@ public class PieceTable<T> {
                 return;
             }
 
+            seg.start = index;
             seg.next = head.next;
 
             if (tail == head) {
