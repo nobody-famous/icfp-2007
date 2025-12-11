@@ -2,8 +2,6 @@ package fuun;
 
 import java.util.ArrayList;
 
-import fuun.stringdna.StringDNA;
-
 public final class Utils {
     private Utils() {
     }
@@ -11,7 +9,7 @@ public final class Utils {
     private static final int MAX_LOOP_COUNT = 10_000_000;
 
     public static DNA createDNA() {
-        return new StringDNA();
+        return new TableDNA();
     }
 
     public static DNA createDNA(Base[] bases) {
