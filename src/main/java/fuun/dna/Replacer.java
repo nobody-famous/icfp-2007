@@ -95,8 +95,11 @@ public class Replacer {
     private fuun.Base[] protect(fuun.DNA toProtect, int level) {
         var bases = new ArrayList<fuun.Base>();
         var cursor = toProtect.getCursor();
+        var loopCount = 0;
 
         while (cursor.peek() != fuun.Base.None) {
+            fuun.Utils.checkLoopCount("protect", loopCount++);
+
             var base = cursor.next();
             var index = getProtectIndex(base);
             bases.addAll(List.of(protectLevels[index][level]));
@@ -107,8 +110,11 @@ public class Replacer {
 
     private fuun.Base[] asnat(int num) {
         var bases = new ArrayList<fuun.Base>();
+        var loopCount = 0;
 
         while (num > 0) {
+            fuun.Utils.checkLoopCount("asnat", loopCount++);
+
             if ((num & 1) == 1) {
                 bases.add(fuun.Base.C);
             } else {

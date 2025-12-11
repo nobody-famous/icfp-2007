@@ -10,6 +10,9 @@ import fuun.dna.Replacer;
 import fuun.dna.TemplateDecoder;
 
 public class App {
+    private static final int MAX_ITERATIONS = 91;
+    private static final int DEBUG_INTERVAL = 10;
+
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
             throw new RuntimeException("Need to give a file name");
@@ -19,6 +22,10 @@ public class App {
         var dna = fuun.Utils.stringToDNA(contents);
 
         execute(dna);
+    }
+
+    private static boolean doDebugPrint(int iteration) {
+        return (iteration % DEBUG_INTERVAL == 0);
     }
 
     private static String readFile(String name) throws Exception {
@@ -36,27 +43,35 @@ public class App {
 
     private static void execute(fuun.DNA dna) {
         try {
-            for (var iteration = 0; iteration < 5; iteration += 1) {
-                System.out.println("Iteration: " + iteration);
-                System.out.println("DNA: " + Utils.dnaToString(dna));
+            for (var iteration = 0; iteration < MAX_ITERATIONS; iteration += 1) {
+                if (doDebugPrint(iteration)) {
+                    System.out.println("Iteration: " + iteration);
+                    System.out.println("DNA: " + Utils.dnaToString(dna));
+                }
 
                 var pattern = new PatternDecoder().decode(dna);
                 var template = new TemplateDecoder().decode(dna);
 
-                System.out.println("Pattern " + pattern);
-                System.out.println("Template " + template);
+                if (doDebugPrint(iteration)) {
+                    System.out.println("Pattern " + pattern);
+                    System.out.println("Template " + template);
+                }
 
                 var env = new ArrayList<fuun.DNA>();
                 if (new Matcher().match(dna, pattern, env)) {
-                    for (var index = 0; index < env.size(); index += 1) {
-                        System.out.println("Env[" + index + "] " + Utils.dnaToString(env.get(index)));
+                    if (doDebugPrint(iteration)) {
+                        for (var index = 0; index < env.size(); index += 1) {
+                            System.out.println("Env[" + index + "] " + Utils.dnaToString(env.get(index)));
+                        }
                     }
 
                     var newDNA = new Replacer().replace(template, env);
                     dna.prepend(newDNA);
                 }
 
-                System.out.println();
+                if (doDebugPrint(iteration)) {
+                    System.out.println("--------------------");
+                }
             }
         } catch (Finished ex) {
             System.out.println("Finished called " + ex);

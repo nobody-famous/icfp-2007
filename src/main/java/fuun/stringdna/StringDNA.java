@@ -95,7 +95,7 @@ public class StringDNA implements DNA {
         var newBases = new fuun.Base[stringDNA.bases.length + bases.length];
 
         System.arraycopy(stringDNA.bases, 0, newBases, 0, stringDNA.length());
-        System.arraycopy(newBases, stringDNA.length(), bases, 0, bases.length);
+        System.arraycopy(bases, 0, newBases, stringDNA.length(), bases.length);
 
         bases = newBases;
     }

@@ -14,21 +14,18 @@ public class Matcher {
                     if (cursor.peek() == baseItem.base()) {
                         cursor.skip(1);
                     } else {
-                        System.out.println("***** MATCH BASE FAILED");
                         return false;
                     }
                     break;
                 case Pattern.Skip skipItem:
                     cursor.skip(skipItem.offset());
                     if (!cursor.isValid()) {
-                        System.out.println("***** MATCH SKIP FAILED");
                         return false;
                     }
                     break;
                 case Pattern.Search searchItem: {
                     var newCursor = findPostfix(cursor, searchItem.srch());
                     if (newCursor == cursor) {
-                        System.out.println("***** MATCH SEARCH FAILED");
                         return false;
                     }
                     cursor = newCursor;
