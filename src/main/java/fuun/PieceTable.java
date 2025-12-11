@@ -26,7 +26,7 @@ public class PieceTable<T> {
             var newOffset = index + offset;
 
             if (seg == null || newOffset < 0 || newOffset > seg.data.length) {
-                throw new RuntimeException("Peek invalid cursor");
+                throw new IndexOutOfBoundsException();
             }
 
             return seg.data[newOffset];
@@ -117,5 +117,9 @@ public class PieceTable<T> {
 
         tail.next = segment;
         tail = segment;
+    }
+
+    public PieceTable<T> slice(Cursor start, Cursor end) {
+        return this;
     }
 }

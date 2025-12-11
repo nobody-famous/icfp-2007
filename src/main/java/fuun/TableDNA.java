@@ -1,7 +1,7 @@
 package fuun;
 
 public class TableDNA implements fuun.DNA {
-    private PieceTable<Base> table = new PieceTable<>();
+    private PieceTable<Base> table;
 
     private class TableCursor implements fuun.DNACursor {
         private PieceTable<Base>.Cursor cursor;
@@ -55,6 +55,14 @@ public class TableDNA implements fuun.DNA {
 
     }
 
+    public TableDNA() {
+        this(new PieceTable<>());
+    }
+
+    public TableDNA(PieceTable<Base> table) {
+        this.table = table;
+    }
+
     @Override
     public void append(Base[] bases) {
         table.append(bases);
@@ -77,7 +85,11 @@ public class TableDNA implements fuun.DNA {
 
     @Override
     public DNA slice(DNACursor start, DNACursor end) {
-        throw new RuntimeException("TableDNA.slice not done yet");
+        var startCurser = (TableCursor) start;
+        var endCurser = (TableCursor) end;
+        var result = table.slice(startCurser.cursor, endCurser.cursor);
+
+        return new TableDNA(result);
     }
 
     @Override

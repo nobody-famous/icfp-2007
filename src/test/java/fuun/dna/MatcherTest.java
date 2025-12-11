@@ -17,7 +17,7 @@ public class MatcherTest {
         var matched = new Matcher().match(dna, pattern, env);
 
         assertEquals(matched, shouldMatch);
-        assertEquals(dna.toString(), dnaResult);
+        assertEquals(dnaResult, dna.toString());
         assertEquals(expectedEnv.size(), env.size());
         for (var index = 0; index < env.size(); index += 1) {
             assertEquals(expectedEnv.get(index).toString(), env.get(index).toString());
