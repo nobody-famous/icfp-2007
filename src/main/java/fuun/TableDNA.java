@@ -3,6 +3,58 @@ package fuun;
 public class TableDNA implements fuun.DNA {
     private PieceTable<Base> table = new PieceTable<>();
 
+    private class TableCursor implements fuun.DNACursor {
+        private PieceTable<Base>.Cursor cursor;
+
+        TableCursor(PieceTable<Base>.Cursor cursor) {
+            this.cursor = cursor;
+        }
+
+        @Override
+        public DNACursor copy() {
+            return new TableCursor(cursor.copy());
+        }
+
+        @Override
+        public boolean isValid() {
+            return cursor.isValid();
+        }
+
+        @Override
+        public Base next() {
+            try {
+                return cursor.next();
+            } catch (IndexOutOfBoundsException ex) {
+                return Base.None;
+            }
+        }
+
+        @Override
+        public Base peek() {
+            return peek(0);
+        }
+
+        @Override
+        public Base peek(int offset) {
+            try {
+                return cursor.peek(offset);
+            } catch (IndexOutOfBoundsException ex) {
+                return Base.None;
+            }
+        }
+
+        @Override
+        public void skip(int offset) {
+            cursor.skip(offset);
+        }
+
+        @Override
+        public void truncate() {
+            cursor.truncate();
+        }
+
+    }
+
     @Override
     public void append(Base[] bases) {
         table.append(bases);
@@ -10,12 +62,12 @@ public class TableDNA implements fuun.DNA {
 
     @Override
     public DNACursor getCursor() {
-        throw new RuntimeException("TableDNA.getCursor not done yet");
+        return new TableCursor(table.getCursor());
     }
 
     @Override
     public int length() {
-        throw new RuntimeException("TableDNA.length not done yet");
+        return table.length();
     }
 
     @Override
@@ -26,5 +78,17 @@ public class TableDNA implements fuun.DNA {
     @Override
     public DNA slice(DNACursor start, DNACursor end) {
         throw new RuntimeException("TableDNA.slice not done yet");
+    }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+        var cursor = getCursor();
+
+        while (cursor.peek() != fuun.Base.None) {
+            builder.append(cursor.next());
+        }
+
+        return builder.toString();
     }
 }
