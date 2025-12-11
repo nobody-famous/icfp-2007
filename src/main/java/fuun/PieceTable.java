@@ -51,7 +51,16 @@ public class PieceTable<T> {
         }
 
         public void truncate() {
+            if (index == seg.data.length) {
+                index = 0;
+                seg = seg.next;
+            }
+
             if (head == null) {
+                return;
+            } else if (seg == null) {
+                head = null;
+                tail = null;
                 return;
             }
 

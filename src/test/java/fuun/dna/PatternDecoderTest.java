@@ -2,7 +2,7 @@ package fuun.dna;
 
 import org.junit.jupiter.api.Test;
 
-public class PatternDecorderTest extends DecoderTest<Pattern> {
+public class PatternDecoderTest extends DecoderTest<Pattern> {
     @Test
     public void basesTest() throws Exception {
         testBases(new PatternDecoder());
