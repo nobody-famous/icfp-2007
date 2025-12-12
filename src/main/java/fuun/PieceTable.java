@@ -2,30 +2,36 @@ package fuun;
 
 public class PieceTable<T> {
     public class Cursor {
+        private PieceTable<T> table = null;
         private Segment seg = null;
         private int index;
 
-        public Cursor(Segment seg) {
-            this(seg, 0);
+        public Cursor(PieceTable<T> table, Segment seg) {
+            this(table, seg, 0);
         }
 
-        public Cursor(Segment seg, int index) {
+        public Cursor(PieceTable<T> table, Segment seg, int index) {
+            this.table = table;
             this.seg = seg;
             this.index = index;
         }
 
         public Cursor copy() {
-            return new Cursor(seg, index);
+            return new Cursor(table, seg, index);
         }
 
         public boolean isValid() {
-            return seg != null && index >= 0 && index <= seg.data.length;
+            return seg != null && index >= 0 && index <= seg.end;
         }
 
         public T peek(int offset) {
-            var newOffset = index + offset;
+            if (seg == null) {
+                throw new IndexOutOfBoundsException();
+            }
 
-            if (seg == null || newOffset < 0 || newOffset > seg.data.length) {
+            var newOffset = seg.start + index + offset;
+
+            if (newOffset < 0 || newOffset > seg.end) {
                 throw new IndexOutOfBoundsException();
             }
 
@@ -41,41 +47,51 @@ public class PieceTable<T> {
         }
 
         public void skip(int count) {
-            while (index + count > seg.data.length) {
-                count -= (seg.data.length - index);
-                index = 0;
+            var loopCounter = 0;
+
+            while (index + count > seg.end) {
+                fuun.Utils.checkLoopCount("skip", loopCounter++);
+                count -= (seg.end - index);
                 seg = seg.next;
+
+                if (seg == null) {
+                    index = 0;
+                    return;
+                }
+
+                index = seg.start;
             }
 
             index += count;
         }
 
         public void truncate() {
-            if (index == seg.data.length) {
-                index = 0;
+            if (seg != null && index == seg.end + 1) {
                 seg = seg.next;
+                index = (seg != null) ? seg.start : 0;
             }
 
-            if (head == null) {
+            if (table.head == null) {
                 return;
             } else if (seg == null) {
-                head = null;
-                tail = null;
+                table.head = null;
+                table.tail = null;
                 return;
             }
 
             seg.start = index;
-            seg.next = head.next;
+            seg.next = table.head.next;
 
-            if (tail == head) {
-                tail = seg;
+            if (table.tail == table.head) {
+                table.tail = seg;
             }
-            head = seg;
+
+            table.head = seg;
         }
     }
 
     public Cursor getCursor() {
-        return new Cursor(head);
+        return new Cursor(this, head);
     }
 
     private class Segment {
@@ -89,6 +105,10 @@ public class PieceTable<T> {
             this.start = start;
             this.end = end;
             this.next = null;
+        }
+
+        public Segment copy() {
+            return new Segment(this.data, this.start, this.end);
         }
     }
 
@@ -121,6 +141,31 @@ public class PieceTable<T> {
     }
 
     public PieceTable<T> slice(Cursor start, Cursor end) {
-        return this;
+        var newTable = new PieceTable<T>();
+        var curSeg = start.seg;
+        var loopCounter = 0;
+
+        while (curSeg != null) {
+            fuun.Utils.checkLoopCount("slice", loopCounter++);
+
+            if (curSeg == start.seg) {
+                newTable.head = curSeg.copy();
+                newTable.head.start += start.index;
+                newTable.tail = newTable.head;
+            }
+
+            if (curSeg == end.seg) {
+                newTable.tail.end = end.index - 1;
+            }
+
+            curSeg = curSeg.next;
+
+            if (curSeg != null) {
+                newTable.tail.next = curSeg.copy();
+                newTable.tail = newTable.tail.next;
+            }
+        }
+
+        return newTable;
     }
 }

@@ -42,9 +42,7 @@ public class Matcher {
             }
         }
 
-        System.out.println("***** BEFORE " + dna.length());
         cursor.truncate();
-        System.out.println("***** AFTER " + dna.length());
 
         return true;
     }
@@ -53,10 +51,13 @@ public class Matcher {
         var table = new int[toFind.length];
         var i = 1;
         var j = 0;
+        var loopCount = 0;
 
         table[0] = 1;
 
         while (i + j < toFind.length) {
+            fuun.Utils.checkLoopCount("buildShiftTable", loopCount++);
+
             if (toFind[i + j] == toFind[j]) {
                 table[i + j] = 1;
                 j += 1;
