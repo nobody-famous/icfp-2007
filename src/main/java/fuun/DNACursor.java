@@ -1,6 +1,8 @@
 package fuun;
 
-public interface DNACursor {
+import java.util.Iterator;
+
+public interface DNACursor extends Iterator<Base> {
     DNACursor copy();
 
     Base peek();
@@ -14,4 +16,7 @@ public interface DNACursor {
     void truncate();
 
     boolean isValid();
+
+    @Override
+    boolean hasNext();
 }

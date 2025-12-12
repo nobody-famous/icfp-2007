@@ -56,7 +56,7 @@ public final class Utils {
 
     public static String dnaToString(fuun.DNA dna) {
         var builder = new StringBuilder();
-        var cursor = dna.getCursor();
+        var cursor = (DNACursor) dna.iterator();
 
         builder.append("(" + dna.length() + ") ");
         for (var count = 0; count < 20 && cursor.peek() != fuun.Base.None; count += 1) {

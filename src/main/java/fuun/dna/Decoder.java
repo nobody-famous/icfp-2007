@@ -28,7 +28,7 @@ abstract class Decoder<T> {
         done = false;
         reset();
 
-        var cursor = dna.getCursor();
+        var cursor = (DNACursor) dna.iterator();
         var loopCount = 0;
 
         while (!done) {

@@ -16,7 +16,7 @@ public class MatcherTest {
         var env = new ArrayList<fuun.DNA>();
         var matched = new Matcher().match(dna, pattern, env);
 
-        assertEquals(matched, shouldMatch);
+        assertEquals(shouldMatch, matched);
         assertEquals(dnaResult, dna.toString());
         assertEquals(expectedEnv.size(), env.size());
         for (var index = 0; index < env.size(); index += 1) {

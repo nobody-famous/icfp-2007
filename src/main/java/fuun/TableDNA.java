@@ -11,6 +11,11 @@ public class TableDNA implements fuun.DNA {
         }
 
         @Override
+        public boolean hasNext() {
+            return cursor.hasNext();
+        }
+
+        @Override
         public DNACursor copy() {
             return new TableCursor(cursor.copy());
         }
@@ -69,8 +74,8 @@ public class TableDNA implements fuun.DNA {
     }
 
     @Override
-    public DNACursor getCursor() {
-        return new TableCursor(table.getCursor());
+    public DNACursor iterator() {
+        return new TableCursor((PieceTable<Base>.Cursor) table.iterator());
     }
 
     @Override
@@ -95,10 +100,9 @@ public class TableDNA implements fuun.DNA {
     @Override
     public String toString() {
         var builder = new StringBuilder();
-        var cursor = getCursor();
 
-        while (cursor.peek() != fuun.Base.None) {
-            builder.append(cursor.next());
+        for (var item : this) {
+            builder.append(item);
         }
 
         return builder.toString();

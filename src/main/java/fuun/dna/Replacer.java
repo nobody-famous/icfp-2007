@@ -3,6 +3,8 @@ package fuun.dna;
 import java.util.ArrayList;
 import java.util.List;
 
+import fuun.DNACursor;
+
 public class Replacer {
     public fuun.DNA replace(fuun.dna.Template template, List<fuun.DNA> env) {
         var result = fuun.Utils.createDNA();
@@ -94,7 +96,7 @@ public class Replacer {
 
     private fuun.Base[] protect(fuun.DNA toProtect, int level) {
         var bases = new ArrayList<fuun.Base>();
-        var cursor = toProtect.getCursor();
+        var cursor = (DNACursor) toProtect.iterator();
         var loopCount = 0;
 
         while (cursor.peek() != fuun.Base.None) {

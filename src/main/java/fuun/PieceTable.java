@@ -1,7 +1,11 @@
 package fuun;
 
-public class PieceTable<T> {
-    public class Cursor {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class PieceTable<T> implements Iterable<T> {
+    public class Cursor implements Iterator<T> {
         private PieceTable<T> table = null;
         private Segment seg = null;
         private int index;
@@ -14,6 +18,11 @@ public class PieceTable<T> {
             this.table = table;
             this.seg = seg;
             this.index = index;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return seg != null && seg.data != null && index >= 0 && index <= seg.end;
         }
 
         public Cursor copy() {
@@ -62,7 +71,7 @@ public class PieceTable<T> {
             var segOffset = index + count;
 
             while (seg != null && segOffset > seg.end) {
-                segOffset -= (seg.end - index);
+                segOffset -= (seg.end - index + 1);
                 seg = seg.next;
                 index = seg == null ? 0 : seg.start;
             }
@@ -87,10 +96,6 @@ public class PieceTable<T> {
         }
     }
 
-    public Cursor getCursor() {
-        return new Cursor(this, head);
-    }
-
     private class Segment {
         public T[] data;
         public int start;
@@ -111,6 +116,11 @@ public class PieceTable<T> {
 
     private Segment head;
     private Segment tail;
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Cursor(this, head);
+    }
 
     public int length() {
         var result = 0;
@@ -166,5 +176,15 @@ public class PieceTable<T> {
         }
 
         return newTable;
+    }
+
+    public List<T> toList() {
+        var items = new ArrayList<T>();
+
+        for (var item : this) {
+            items.add(item);
+        }
+
+        return items;
     }
 }

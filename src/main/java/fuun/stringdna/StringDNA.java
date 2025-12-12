@@ -29,6 +29,11 @@ public class StringDNA implements DNA {
         }
 
         @Override
+        public boolean hasNext() {
+            return index >= 0 && index < bases.length;
+        }
+
+        @Override
         public Base next() {
             var base = isInRange(index) ? bases[index] : fuun.Base.None;
             index += 1;
@@ -70,7 +75,7 @@ public class StringDNA implements DNA {
     }
 
     @Override
-    public DNACursor getCursor() {
+    public DNACursor iterator() {
         return new Cursor();
     }
 

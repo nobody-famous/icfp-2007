@@ -3,9 +3,11 @@ package fuun.dna;
 import java.util.List;
 import java.util.Stack;
 
+import fuun.DNACursor;
+
 public class Matcher {
     public boolean match(fuun.DNA dna, fuun.dna.Pattern pattern, List<fuun.DNA> env) {
-        var cursor = dna.getCursor();
+        var cursor = (DNACursor) dna.iterator();
         var cursorStack = new Stack<fuun.DNACursor>();
 
         for (var item : pattern.getItems()) {
