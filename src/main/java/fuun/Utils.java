@@ -6,10 +6,11 @@ public final class Utils {
     private Utils() {
     }
 
-    private static final int MAX_LOOP_COUNT = 100_000;
+    private static final int MAX_LOOP_COUNT = 10_000_000;
 
     public static DNA createDNA() {
         return new TableDNA();
+        // return new StringDNA();
     }
 
     public static DNA createDNA(Base[] bases) {

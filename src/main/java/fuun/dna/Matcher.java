@@ -89,7 +89,7 @@ public class Matcher {
         var innerLoopCount = 0;
         var outerLoopCount = 0;
 
-        while (iCursor.isValid()) {
+        while (iCursor.hasNext()) {
             fuun.Utils.checkLoopCount("findPostfix", outerLoopCount++);
 
             while (jCursor.peek() == toFind[j]) {

@@ -86,7 +86,7 @@ public class PieceTable<T> implements Iterable<T> {
                 return;
             }
 
-            seg.start += index;
+            seg.start = index;
             head = seg;
 
             if (seg.next == null || seg.next.data == null) {
