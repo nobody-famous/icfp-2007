@@ -7,7 +7,7 @@ public class PieceTable<T> {
         private int index;
 
         public Cursor(PieceTable<T> table, Segment seg) {
-            this(table, seg, 0);
+            this(table, seg, seg == null ? 0 : seg.start);
         }
 
         public Cursor(PieceTable<T> table, Segment seg, int index) {
@@ -25,68 +25,65 @@ public class PieceTable<T> {
         }
 
         public T peek(int offset) {
-            if (seg == null) {
+            if (seg == null || seg.data == null) {
                 throw new IndexOutOfBoundsException();
             }
 
-            var newOffset = seg.start + index + offset;
+            var segOffset = index + offset;
 
-            if (newOffset < 0 || newOffset > seg.end) {
+            var loopCounter = 0;
+            while (seg != null && segOffset > seg.end) {
+                fuun.Utils.checkLoopCount("peek", loopCounter++);
+
+                segOffset -= (seg.end - index);
+                seg = seg.next;
+            }
+
+            if (seg == null || seg.data == null || segOffset >= seg.data.length) {
                 throw new IndexOutOfBoundsException();
             }
 
-            return seg.data[newOffset];
+            return seg.data[segOffset];
         }
 
         public T next() {
             var item = peek(0);
 
             index += 1;
+            if (index > seg.end) {
+                seg = seg.next;
+                index = seg.start;
+            }
 
             return item;
         }
 
         public void skip(int count) {
-            var loopCounter = 0;
+            var segOffset = index + count;
 
-            while (index + count > seg.end) {
-                fuun.Utils.checkLoopCount("skip", loopCounter++);
-                count -= (seg.end - index);
+            while (seg != null && segOffset > seg.end) {
+                segOffset -= (seg.end - index);
                 seg = seg.next;
-
-                if (seg == null) {
-                    index = 0;
-                    return;
-                }
-
-                index = seg.start;
+                index = seg == null ? 0 : seg.start;
             }
 
-            index += count;
+            index = segOffset;
         }
 
         public void truncate() {
-            if (seg != null && index == seg.end + 1) {
-                seg = seg.next;
-                index = (seg != null) ? seg.start : 0;
-            }
-
-            if (table.head == null) {
-                return;
-            } else if (seg == null) {
-                table.head = null;
-                table.tail = null;
+            if (seg == null || seg.data == null) {
+                head = null;
+                tail = null;
                 return;
             }
 
-            seg.start = index;
-            seg.next = table.head.next;
+            seg.start += index;
+            head = seg;
 
-            if (table.tail == table.head) {
-                table.tail = seg;
+            if (seg.next == null || seg.next.data == null) {
+                tail = seg;
+                seg.next = new Segment(null, 0, 0);
             }
-
-            table.head = seg;
         }
     }
 
@@ -119,7 +116,7 @@ public class PieceTable<T> {
         var result = 0;
         var seg = head;
 
-        while (seg != null) {
+        while (seg != null && seg.data != null) {
             result += (seg.end - seg.start + 1);
             seg = seg.next;
         }
@@ -129,6 +126,8 @@ public class PieceTable<T> {
 
     public void append(T[] items) {
         var segment = new Segment(items, 0, items.length - 1);
+
+        segment.next = new Segment(null, 0, 0);
 
         if (head == null) {
             head = segment;
