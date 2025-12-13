@@ -85,7 +85,7 @@ public class TableDNA implements fuun.DNA {
 
     @Override
     public void prepend(DNA dna) {
-        throw new RuntimeException("TableDNA.prepend not done yet");
+        table.prepend(((TableDNA) dna).table);
     }
 
     @Override

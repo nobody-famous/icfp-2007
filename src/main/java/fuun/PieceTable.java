@@ -91,7 +91,7 @@ public class PieceTable<T> implements Iterable<T> {
 
             if (seg.next == null || seg.next.data == null) {
                 tail = seg;
-                seg.next = new Segment(null, 0, 0);
+                tail.next = new Segment(null, -1, -1);
             }
         }
     }
@@ -127,7 +127,7 @@ public class PieceTable<T> implements Iterable<T> {
         var seg = head;
 
         while (seg != null && seg.data != null) {
-            result += (seg.end - seg.start + 1);
+            result += (seg.end - seg.start);
             seg = seg.next;
         }
 
@@ -137,7 +137,7 @@ public class PieceTable<T> implements Iterable<T> {
     public void append(T[] items) {
         var segment = new Segment(items, 0, items.length - 1);
 
-        segment.next = new Segment(null, 0, 0);
+        segment.next = new Segment(null, -1, -1);
 
         if (head == null) {
             head = segment;
@@ -149,31 +149,28 @@ public class PieceTable<T> implements Iterable<T> {
         tail = segment;
     }
 
+    public void prepend(PieceTable<T> toPrepend) {
+        toPrepend.tail.next = head;
+        head = toPrepend.head;
+    }
+
     public PieceTable<T> slice(Cursor start, Cursor end) {
         var newTable = new PieceTable<T>();
-        var curSeg = start.seg;
-        var loopCounter = 0;
 
-        while (curSeg != null) {
-            fuun.Utils.checkLoopCount("slice", loopCounter++);
-
-            if (curSeg == start.seg) {
-                newTable.head = curSeg.copy();
-                newTable.head.start += start.index;
-                newTable.tail = newTable.head;
-            }
-
-            if (curSeg == end.seg) {
-                newTable.tail.end = end.index - 1;
-            }
-
-            curSeg = curSeg.next;
-
-            if (curSeg != null) {
-                newTable.tail.next = curSeg.copy();
-                newTable.tail = newTable.tail.next;
-            }
+        if (start.seg == null || end.seg == null) {
+            return newTable;
         }
+
+        newTable.head = start.seg.copy();
+        newTable.head.start = start.index;
+        newTable.tail = newTable.head;
+
+        if (start.seg != end.seg) {
+            throw new RuntimeException("Need to handle slice spanning segments");
+        }
+
+        newTable.tail.end = end.index;
+        newTable.tail.next = new Segment(null, -1, -1);
 
         return newTable;
     }
