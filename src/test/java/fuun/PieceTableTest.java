@@ -46,6 +46,19 @@ public class PieceTableTest {
         assertEquals(expected, cursor.peek(0));
     }
 
+    private void runSlice(int start, int end, String expected) {
+        var table = createTestTable();
+        var startCursor = (PieceTable<Character>.Cursor) table.iterator();
+        var endCursor = (PieceTable<Character>.Cursor) table.iterator();
+
+        startCursor.skip(start);
+        endCursor.skip(end);
+
+        var slice = table.slice(startCursor, endCursor);
+
+        assertArrayEquals(stringToChars(expected), slice.toList().toArray());
+    }
+
     @Test
     void appendTest() {
         var table = createTestTable();
@@ -59,6 +72,16 @@ public class PieceTableTest {
         runSkip(3, 'd');
         assertThrowsExactly(IndexOutOfBoundsException.class, () -> runSkip(9, '\0'));
         runSkip(5, 'f');
+    }
+
+    @Test
+    void sliceTest() {
+        runSlice(1, 6, "bcdef");
+        runSlice(1, 1, "");
+        runSlice(1, 2, "b");
+        runSlice(0, 9, "abcdefghi");
+        runSlice(0, 12, "abcdefghi");
+        runSlice(5, 1, "fghi");
     }
 
     @Test

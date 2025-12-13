@@ -61,7 +61,7 @@ public class PieceTable<T> implements Iterable<T> {
             index += 1;
             if (index > seg.end) {
                 seg = seg.next;
-                index = seg.start;
+                index = (seg == null) ? 0 : seg.start;
             }
 
             return item;
@@ -127,7 +127,7 @@ public class PieceTable<T> implements Iterable<T> {
         var seg = head;
 
         while (seg != null && seg.data != null) {
-            result += (seg.end - seg.start);
+            result += (seg.end - seg.start + 1);
             seg = seg.next;
         }
 
@@ -157,7 +157,7 @@ public class PieceTable<T> implements Iterable<T> {
     public PieceTable<T> slice(Cursor start, Cursor end) {
         var newTable = new PieceTable<T>();
 
-        if (start.seg == null || end.seg == null) {
+        if (start.seg == null) {
             return newTable;
         }
 
@@ -166,10 +166,23 @@ public class PieceTable<T> implements Iterable<T> {
         newTable.tail = newTable.head;
 
         if (start.seg != end.seg) {
-            throw new RuntimeException("Need to handle slice spanning segments");
+            for (var seg = start.seg.next; seg != null && seg != end.seg; seg = seg == null ? null : seg.next) {
+                newTable.tail.next = seg.copy();
+                newTable.tail = newTable.tail.next;
+            }
+
+            if (end.seg != null) {
+                newTable.tail.next = end.seg.copy();
+                newTable.tail = newTable.tail.next;
+            }
+        } else if (end.index == 0) {
+            throw new RuntimeException("Need to handle end pointing to empty segment");
         }
 
-        newTable.tail.end = end.index;
+        if (end.seg != null) {
+            newTable.tail.end = end.index - 1;
+        }
+
         newTable.tail.next = new Segment(null, -1, -1);
 
         return newTable;
