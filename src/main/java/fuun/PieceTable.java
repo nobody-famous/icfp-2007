@@ -70,7 +70,7 @@ public class PieceTable<T> implements Iterable<T> {
         public void skip(int count) {
             var segOffset = index + count;
 
-            while (seg != null && segOffset > seg.end) {
+            while (seg != null && seg.data != null && segOffset > seg.end) {
                 segOffset -= (seg.end - index + 1);
                 seg = seg.next;
                 index = seg == null ? 0 : seg.start;
@@ -91,7 +91,7 @@ public class PieceTable<T> implements Iterable<T> {
 
             if (seg.next == null || seg.next.data == null) {
                 tail = seg;
-                tail.next = new Segment(null, -1, -1);
+                tail.next = new Segment(null, 0, 0);
             }
         }
     }
@@ -137,7 +137,7 @@ public class PieceTable<T> implements Iterable<T> {
     public void append(T[] items) {
         var segment = new Segment(items, 0, items.length - 1);
 
-        segment.next = new Segment(null, -1, -1);
+        segment.next = new Segment(null, 0, 0);
 
         if (head == null) {
             head = segment;
@@ -183,7 +183,7 @@ public class PieceTable<T> implements Iterable<T> {
             newTable.tail.end = end.index - 1;
         }
 
-        newTable.tail.next = new Segment(null, -1, -1);
+        newTable.tail.next = new Segment(null, 0, 0);
 
         return newTable;
     }
