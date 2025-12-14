@@ -2,7 +2,7 @@ package fuun;
 
 import java.util.ArrayList;
 
-import fuun.stringdna.StringDNA;
+import fuun.piecetable.PieceTable;
 
 public final class Utils {
     private Utils() {
@@ -13,7 +13,8 @@ public final class Utils {
 
     public static DNA createDNA() {
         // return new TableDNA();
-        return new StringDNA();
+        return new PieceTable();
+        // return new StringDNA();
     }
 
     public static DNA createDNA(Base[] bases) {

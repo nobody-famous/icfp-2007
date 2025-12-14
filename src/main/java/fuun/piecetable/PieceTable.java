@@ -29,7 +29,13 @@ public class PieceTable implements fuun.DNA {
 
     @Override
     public int length() {
-        throw new RuntimeException("PieceTable.length not done yet");
+        var result = 0;
+
+        for (var seg = head; seg != null; seg = seg.getNext()) {
+            result += (seg.getLast() - seg.getFirst() + 1);
+        }
+
+        return result;
     }
 
     @Override
