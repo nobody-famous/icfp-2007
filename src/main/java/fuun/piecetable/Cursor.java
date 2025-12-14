@@ -12,6 +12,14 @@ public class Cursor implements DNACursor {
         index = seg.getFirst();
     }
 
+    Segment getSegment() {
+        return curSegment;
+    }
+
+    int getIndex() {
+        return index;
+    }
+
     @Override
     public DNACursor copy() {
         throw new RuntimeException("Cursor.copy not done yet");

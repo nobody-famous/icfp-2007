@@ -12,8 +12,10 @@ public class PieceTable implements fuun.DNA {
 
     @Override
     public void append(Base[] bases) {
-        var seg = new Segment(bases, 0, bases.length - 1);
+        append(new Segment(bases, 0, bases.length - 1));
+    }
 
+    private void append(Segment seg) {
         if (head == null) {
             head = seg;
             tail = seg;
@@ -37,7 +39,31 @@ public class PieceTable implements fuun.DNA {
 
     @Override
     public DNA slice(DNACursor start, DNACursor end) {
-        throw new RuntimeException("PieceTable.slice not done yet");
+        var dna = new PieceTable();
+        var startCursor = (Cursor) start;
+        var endCursor = (Cursor) end;
+        var curSeg = startCursor.getSegment();
+
+        dna.append(new Segment(
+                curSeg.getBuffer(),
+                startCursor.getIndex(),
+                startCursor.getSegment() == endCursor.getSegment() ? endCursor.getIndex() - 1 : curSeg.getLast()));
+
+        if (startCursor.getSegment() == endCursor.getSegment()) {
+            return dna;
+        }
+
+        curSeg = curSeg.getNext();
+        while (curSeg != null && curSeg != endCursor.getSegment()) {
+            dna.append(new Segment(curSeg));
+            curSeg = curSeg.getNext();
+        }
+
+        if (curSeg != null && curSeg == endCursor.getSegment()) {
+            dna.append(new Segment(curSeg.getBuffer(), curSeg.getFirst(), endCursor.getIndex() - 1));
+        }
+
+        return dna;
     }
 
     @Override

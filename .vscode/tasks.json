@@ -14,7 +14,7 @@
             "label": "One Test",
             "type": "shell",
             "command": "mvn",
-            "args": ["clean", "-Dtest=fuun.piecetable.PieceTableTest#testSkip", "test"],
+            "args": ["clean", "-Dtest=fuun.piecetable.PieceTableTest#testSlice", "test"],
             "problemMatcher": []
         },
         {

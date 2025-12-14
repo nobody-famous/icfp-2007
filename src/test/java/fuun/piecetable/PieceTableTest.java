@@ -1,5 +1,6 @@
 package fuun.piecetable;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -42,5 +43,27 @@ public class PieceTableTest {
         runSkip(6, Base.F);
         runSkip(8, Base.I);
         runSkip(11, Base.P);
+    }
+
+    private void runSlice(int startSkip, int endSkip, String expected) {
+        var table = createTestTable();
+        var startCursor = (Cursor) table.iterator();
+        var endCursor = (Cursor) table.iterator();
+
+        startCursor.skip(startSkip);
+        endCursor.skip(endSkip);
+
+        assertEquals(expected, table.slice(startCursor, endCursor).toString());
+    }
+
+    @Test
+    void testSlice() {
+        runSlice(2, 6, "FPIC");
+        runSlice(0, 4, "ICFP");
+        runSlice(4, 8, "ICFP");
+        runSlice(8, 12, "ICFP");
+        runSlice(0, 8, "ICFPICFP");
+        runSlice(0, 12, "ICFPICFPICFP");
+        runSlice(2, 10, "FPICFPIC");
     }
 }

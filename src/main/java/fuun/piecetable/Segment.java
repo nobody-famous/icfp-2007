@@ -9,6 +9,10 @@ public class Segment {
     private Segment prev;
     private Segment next;
 
+    public Segment(Segment copy) {
+        this(copy.buffer, copy.first, copy.last);
+    }
+
     public Segment(Base[] bases, int start, int end) {
         buffer = bases;
         first = start;
