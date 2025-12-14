@@ -63,7 +63,24 @@ public class Cursor implements DNACursor {
 
     @Override
     public void skip(int offset) {
-        throw new RuntimeException("Cursor.skip not done yet");
+        if (offset < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        if (index + offset < curSegment.getLast()) {
+            index += offset;
+            return;
+        }
+
+        while (curSegment != null && index + offset > curSegment.getLast()) {
+            offset -= (curSegment.getLast() - index + 1);
+            curSegment = curSegment.getNext();
+            index = curSegment != null ? curSegment.getFirst() : 0;
+        }
+
+        if (curSegment != null) {
+            index = curSegment.getFirst() + offset;
+        }
     }
 
     @Override

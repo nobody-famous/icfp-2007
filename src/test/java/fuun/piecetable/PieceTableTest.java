@@ -23,4 +23,24 @@ public class PieceTableTest {
 
         assertEquals("ICFPICFPICFP", table.toString());
     }
+
+    private void runSkip(int offset, Base expected) {
+        var table = createTestTable();
+        var cursor = (Cursor) table.iterator();
+
+        cursor.skip(offset);
+
+        assertEquals(expected, cursor.peek());
+    }
+
+    @Test
+    void testSkip() {
+        runSkip(2, Base.F);
+        runSkip(4, Base.I);
+        runSkip(12, Base.None);
+        runSkip(15, Base.None);
+        runSkip(6, Base.F);
+        runSkip(8, Base.I);
+        runSkip(11, Base.P);
+    }
 }
