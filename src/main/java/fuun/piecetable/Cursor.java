@@ -9,7 +9,7 @@ public class Cursor implements DNACursor {
 
     public Cursor(Segment seg) {
         curSegment = seg;
-        index = seg.getFirst();
+        index = seg != null ? seg.getFirst() : 0;
     }
 
     Segment getSegment() {
@@ -89,10 +89,5 @@ public class Cursor implements DNACursor {
         if (curSegment != null) {
             index = curSegment.getFirst() + offset;
         }
-    }
-
-    @Override
-    public void truncate() {
-        throw new RuntimeException("Cursor.truncate not done yet");
     }
 }

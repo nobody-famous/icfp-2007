@@ -8,4 +8,6 @@ public interface DNA extends Iterable<Base> {
     void prepend(DNA dna);
 
     DNA slice(DNACursor start, DNACursor end);
+
+    void truncate(DNACursor cursor);
 }

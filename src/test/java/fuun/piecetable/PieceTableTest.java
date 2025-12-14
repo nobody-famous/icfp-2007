@@ -65,4 +65,33 @@ public class PieceTableTest {
         runSlice(0, 12, "ICFPICFPICFP");
         runSlice(2, 10, "FPICFPIC");
     }
+
+    private void runTruncate(int offset, String expected) {
+        var table = new PieceTable();
+
+        table.append(new Base[] { Base.I, Base.I, Base.I, Base.I });
+        table.append(new Base[] { Base.C, Base.C, Base.C, Base.C });
+        table.append(new Base[] { Base.F, Base.F, Base.F, Base.F });
+        table.append(new Base[] { Base.P, Base.P, Base.P, Base.P });
+
+        var cursor = (Cursor) table.iterator();
+
+        cursor.skip(offset);
+        table.truncate(cursor);
+
+        assertEquals(expected, table.toString());
+    }
+
+    @Test
+    void testTruncate() {
+        runTruncate(1, "IIICCCCFFFFPPPP");
+        runTruncate(4, "CCCCFFFFPPPP");
+        runTruncate(6, "CCFFFFPPPP");
+        runTruncate(8, "FFFFPPPP");
+        runTruncate(10, "FFPPPP");
+        runTruncate(12, "PPPP");
+        runTruncate(14, "PP");
+        runTruncate(16, "");
+        runTruncate(18, "");
+    }
 }

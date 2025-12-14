@@ -58,20 +58,6 @@ public class StringDNA implements DNA {
         public void skip(int offset) {
             index += offset;
         }
-
-        @Override
-        public void truncate() {
-            if (index >= bases.length) {
-                bases = new Base[0];
-                return;
-            }
-
-            var newLength = bases.length - index;
-            var newBases = new Base[newLength];
-
-            System.arraycopy(bases, index, newBases, 0, newLength);
-            bases = newBases;
-        }
     }
 
     @Override
@@ -118,6 +104,22 @@ public class StringDNA implements DNA {
         dna.bases = newBases;
 
         return dna;
+    }
+
+    @Override
+    public void truncate(DNACursor cursor) {
+        var iter = (Cursor) cursor;
+
+        if (iter.index >= bases.length) {
+            bases = new Base[0];
+            return;
+        }
+
+        var newLength = bases.length - iter.index;
+        var newBases = new Base[newLength];
+
+        System.arraycopy(bases, iter.index, newBases, 0, newLength);
+        bases = newBases;
     }
 
     @Override

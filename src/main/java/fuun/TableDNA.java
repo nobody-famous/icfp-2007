@@ -52,12 +52,6 @@ public class TableDNA implements fuun.DNA {
         public void skip(int offset) {
             cursor.skip(offset);
         }
-
-        @Override
-        public void truncate() {
-            cursor.truncate();
-        }
-
     }
 
     public TableDNA() {
@@ -95,6 +89,11 @@ public class TableDNA implements fuun.DNA {
         var result = table.slice(startCurser.cursor, endCurser.cursor);
 
         return new TableDNA(result);
+    }
+
+    @Override
+    public void truncate(DNACursor cursor) {
+        throw new RuntimeException("truncate not done yet");
     }
 
     @Override

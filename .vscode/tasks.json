@@ -14,14 +14,19 @@
             "label": "One Test",
             "type": "shell",
             "command": "mvn",
-            "args": ["clean", "-Dtest=fuun.piecetable.PieceTableTest#testSlice", "test"],
+            "linux": {
+                "args": ["clean", "-Dtest=fuun.piecetable.PieceTableTest#testTruncate", "test"]
+            },
+            "windows": {
+                "args": ["clean", "-Dtest='fuun.piecetable.PieceTableTest#testTruncate'", "test"]
+            },
             "problemMatcher": []
         },
         {
             "label": "Run App",
             "type": "shell",
             "command": "mvn",
-            "args": ["exec:java", "-D'exec.mainClass'=fuun.App","-D'exec.args'=dna/endo.dna"],
+            "args": ["exec:java", "-D'exec.mainClass'=fuun.App", "-D'exec.args'=dna/endo.dna"],
             "problemMatcher": []
         }
     ]

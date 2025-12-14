@@ -44,7 +44,7 @@ public class Matcher {
             }
         }
 
-        cursor.truncate();
+        dna.truncate(cursor);
 
         return true;
     }

@@ -38,7 +38,7 @@ abstract class Decoder<T> {
             handlePrefix(cursor, prefix);
         }
 
-        cursor.truncate();
+        dna.truncate(cursor);
 
         return result;
     }

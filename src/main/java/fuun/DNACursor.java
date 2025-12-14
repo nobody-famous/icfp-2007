@@ -13,8 +13,6 @@ public interface DNACursor extends Iterator<Base> {
 
     void skip(int offset);
 
-    void truncate();
-
     boolean isValid();
 
     @Override

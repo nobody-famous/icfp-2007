@@ -72,6 +72,27 @@ public class PieceTable implements fuun.DNA {
     }
 
     @Override
+    public void truncate(DNACursor cursor) {
+        var iter = (Cursor) cursor;
+        var cursorSeg = iter.getSegment();
+
+        if (cursorSeg == null) {
+            head = null;
+            tail = null;
+            return;
+        }
+
+        var seg = new Segment(cursorSeg.getBuffer(), iter.getIndex(), cursorSeg.getLast());
+
+        seg.setNext(cursorSeg.getNext());
+        head = seg;
+
+        if (head.getNext() == null) {
+            tail = head;
+        }
+    }
+
+    @Override
     public String toString() {
         var builder = new StringBuilder();
         var loopCount = 0;
