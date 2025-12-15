@@ -7,9 +7,17 @@ public class Cursor implements DNACursor {
     private Segment curSegment;
     private int index;
 
+    public Cursor(Cursor copy) {
+        this(copy.curSegment, copy.index);
+    }
+
     public Cursor(Segment seg) {
+        this(seg, seg != null ? seg.getFirst() : 0);
+    }
+
+    public Cursor(Segment seg, int index) {
         curSegment = seg;
-        index = seg != null ? seg.getFirst() : 0;
+        this.index = index;
     }
 
     Segment getSegment() {
@@ -22,12 +30,12 @@ public class Cursor implements DNACursor {
 
     @Override
     public DNACursor copy() {
-        throw new RuntimeException("Cursor.copy not done yet");
+        return new Cursor(this);
     }
 
     @Override
     public boolean hasNext() {
-        return peek(0) != Base.None;
+        return peek() != Base.None;
     }
 
     @Override
@@ -62,11 +70,14 @@ public class Cursor implements DNACursor {
             return Base.None;
         }
 
-        if (offset > 0 || index + offset > curSegment.getLast()) {
-            throw new RuntimeException("Cursor.peek not done yet");
+        var seg = curSegment;
+        while (seg != null && index + offset > seg.getLast()) {
+            offset -= (seg.getLast() - index + 1);
+            seg = seg.getNext();
+            index = seg != null ? seg.getFirst() : 0;
         }
 
-        return isValid() ? curSegment.get(index + offset) : Base.None;
+        return seg != null && index + offset <= seg.getLast() ? seg.get(index + offset) : Base.None;
     }
 
     @Override
@@ -75,7 +86,7 @@ public class Cursor implements DNACursor {
             throw new IllegalArgumentException();
         }
 
-        if (index + offset < curSegment.getLast()) {
+        if (index + offset <= curSegment.getLast()) {
             index += offset;
             return;
         }
