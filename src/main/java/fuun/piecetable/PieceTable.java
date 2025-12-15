@@ -40,7 +40,28 @@ public class PieceTable implements fuun.DNA {
 
     @Override
     public void prepend(DNA dna) {
-        throw new RuntimeException("PieceTable.prepend not done yet");
+        var toPrepend = (PieceTable) dna;
+        if (toPrepend.head == null) {
+            return;
+        }
+
+        var seg = new Segment(toPrepend.head);
+        var first = seg;
+        var last = seg;
+        var loopCount = 0;
+
+        for (var dnaSeg = toPrepend.head.getNext(); dnaSeg != null; dnaSeg = dnaSeg.getNext()) {
+            fuun.Utils.checkLoopCount("prepend", loopCount++);
+
+            seg.setNext(new Segment(dnaSeg));
+            seg = seg.getNext();
+            if (seg != null) {
+                last = seg;
+            }
+        }
+
+        last.setNext(head);
+        head = first;
     }
 
     @Override

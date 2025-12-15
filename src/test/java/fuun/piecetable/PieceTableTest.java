@@ -24,6 +24,23 @@ public class PieceTableTest {
         assertEquals("ICFPICFPICFP", table.toString());
     }
 
+    @Test
+    void testPrepend() {
+        var table = new PieceTable();
+
+        table.prepend(fuun.Utils.stringToDNA("PPPP"));
+        table.prepend(fuun.Utils.stringToDNA("FFFF"));
+        table.prepend(fuun.Utils.stringToDNA("CCCC"));
+        table.prepend(fuun.Utils.stringToDNA("IIII"));
+
+        assertEquals("IIIICCCCFFFFPPPP", table.toString());
+
+        table = new PieceTable();
+        table.prepend(fuun.Utils.stringToDNA("ICFP"));
+
+        assertEquals("ICFP", table.toString());
+    }
+
     private void runSkip(int offset, Base expected) {
         var table = createTestTable();
         var cursor = (Cursor) table.iterator();
