@@ -12,18 +12,18 @@ public class Replacer {
         for (var item : template.getItems()) {
             switch (item) {
                 case Template.Base baseItem:
-                    result.append(new fuun.Base[] { baseItem.base() });
+                    fuun.Utils.timer("base", () -> result.append(new fuun.Base[] { baseItem.base() }));
                     break;
                 case Template.Protect protectItem: {
                     var envItem = getEnvItem(env, protectItem.reference());
                     if (envItem != null) {
-                        result.append(protect(envItem, protectItem.level()));
+                        fuun.Utils.timer("protect", () -> result.append(protect(envItem, protectItem.level())));
                     }
                     break;
                 }
                 case Template.Length lengthItem: {
                     var envItem = getEnvItem(env, lengthItem.reference());
-                    result.append(asnat(envItem == null ? 0 : envItem.length()));
+                    fuun.Utils.timer("length", () -> result.append(asnat(envItem == null ? 0 : envItem.length())));
                     break;
                 }
                 default:
@@ -94,10 +94,14 @@ public class Replacer {
         return 0;
     }
 
-    private fuun.Base[] protect(fuun.DNA toProtect, int level) {
+    private fuun.DNA protect(fuun.DNA toProtect, int level) {
         var bases = new ArrayList<fuun.Base>();
         var cursor = (DNACursor) toProtect.iterator();
         var loopCount = 0;
+
+        if (level == 0) {
+            return toProtect;
+        }
 
         while (cursor.peek() != fuun.Base.None) {
             fuun.Utils.checkLoopCount("protect", loopCount++);
@@ -107,7 +111,7 @@ public class Replacer {
             bases.addAll(List.of(protectLevels[index][level]));
         }
 
-        return bases.toArray(new fuun.Base[bases.size()]);
+        return fuun.Utils.createDNA(bases.toArray(new fuun.Base[bases.size()]));
     }
 
     private fuun.Base[] asnat(int num) {

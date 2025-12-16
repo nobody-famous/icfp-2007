@@ -82,7 +82,7 @@ public class Cursor implements DNACursor {
 
     @Override
     public void skip(int offset) {
-        if (offset < 0) {
+        if (offset < 0 || curSegment == null) {
             throw new IllegalArgumentException();
         }
 

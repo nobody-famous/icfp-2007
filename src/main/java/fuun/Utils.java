@@ -1,6 +1,9 @@
 package fuun;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 import fuun.piecetable.PieceTable;
 
@@ -74,6 +77,44 @@ public final class Utils {
     public static void checkLoopCount(String label, int count) {
         if (count >= MAX_LOOP_COUNT) {
             throw new RuntimeException(label + ": Infinite loop detected");
+        }
+    }
+
+    private static Map<String, Long> times = new HashMap<>();
+
+    private static void updateTime(String label, long value) {
+        times.put(label, times.getOrDefault(label, 0L) + value);
+    }
+
+    public static <T> T timer(String label, Supplier<T> fn) {
+        var startTime = System.nanoTime();
+
+        try {
+            return fn.get();
+        } finally {
+            updateTime(label, System.nanoTime() - startTime);
+        }
+    }
+
+    public static void timer(String label, Runnable fn) {
+        var startTime = System.nanoTime();
+
+        try {
+            fn.run();
+        } finally {
+            updateTime(label, System.nanoTime() - startTime);
+        }
+    }
+
+    public static void printTimes() {
+        if (times.size() == 0) {
+            return;
+        }
+
+        System.out.println("Times");
+        for (var entry : times.entrySet()) {
+            var value = String.format("%.3f", (entry.getValue() / 1_000_000_000.0));
+            System.out.println("  " + entry.getKey() + ": " + value + " s");
         }
     }
 }

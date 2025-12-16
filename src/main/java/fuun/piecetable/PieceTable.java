@@ -15,6 +15,29 @@ public class PieceTable implements fuun.DNA {
         append(new Segment(bases, 0, bases.length - 1));
     }
 
+    @Override
+    public void append(DNA dna) {
+        var toAppend = (PieceTable) dna;
+        var seg = new Segment(toAppend.head);
+        var first = seg;
+        var last = seg;
+        var loopCount = 0;
+
+        for (var dnaSeg = toAppend.head.getNext(); dnaSeg != null; dnaSeg = dnaSeg.getNext()) {
+            fuun.Utils.checkLoopCount("append", loopCount++);
+
+            seg.setNext(new Segment(dnaSeg));
+            seg = seg.getNext();
+            last = seg;
+        }
+
+        last.setNext(head);
+        if (tail == null) {
+            tail = last;
+        }
+        head = first;
+    }
+
     private void append(Segment seg) {
         if (head == null) {
             head = seg;
@@ -55,9 +78,9 @@ public class PieceTable implements fuun.DNA {
 
             seg.setNext(new Segment(dnaSeg));
             seg = seg.getNext();
-            if (seg != null) {
-                last = seg;
-            }
+            // if (seg != null) {
+            last = seg;
+            // }
         }
 
         last.setNext(head);

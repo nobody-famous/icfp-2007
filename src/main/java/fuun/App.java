@@ -10,7 +10,7 @@ import fuun.dna.Replacer;
 import fuun.dna.TemplateDecoder;
 
 public class App {
-    private static final int MAX_ITERATIONS = 101;
+    private static final int MAX_ITERATIONS = 100;
     private static final int DEBUG_INTERVAL = 10;
 
     public static void main(String[] args) throws Exception {
@@ -22,6 +22,8 @@ public class App {
         var dna = fuun.Utils.stringToDNA(contents);
 
         execute(dna);
+
+        fuun.Utils.printTimes();
     }
 
     private static boolean doDebugPrint(int iteration) {
