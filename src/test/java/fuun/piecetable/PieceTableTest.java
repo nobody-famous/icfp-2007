@@ -22,6 +22,16 @@ public class PieceTableTest {
         var table = createTestTable();
 
         assertEquals("ICFPICFPICFP", table.toString());
+
+        table = new PieceTable();
+
+        table.append(fuun.Utils.stringToDNA("IIII"));
+        table.append(fuun.Utils.stringToDNA("CCCC"));
+        table.append(fuun.Utils.stringToDNA("FFFF"));
+        table.append(fuun.Utils.stringToDNA("PPPP"));
+        table.append(createTestTable());
+
+        assertEquals("IIIICCCCFFFFPPPPICFPICFPICFP", table.toString());
     }
 
     @Test

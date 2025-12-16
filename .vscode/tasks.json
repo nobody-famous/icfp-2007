@@ -15,7 +15,7 @@
             "type": "shell",
             "command": "mvn",
             "linux": {
-                "args": ["clean", "-Dtest=fuun.piecetable.PieceTableTest#testPrepend", "test"]
+                "args": ["clean", "-Dtest=fuun.piecetable.PieceTableTest#testAppend", "test"]
             },
             "windows": {
                 "args": ["clean", "-Dtest='fuun.piecetable.PieceTableTest#testTruncate'", "test"]

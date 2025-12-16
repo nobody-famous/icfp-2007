@@ -68,6 +68,11 @@ public class TableDNA implements fuun.DNA {
     }
 
     @Override
+    public void append(DNA dna) {
+        throw new RuntimeException("TableDNA.append not done yet");
+    }
+
+    @Override
     public DNACursor iterator() {
         return new TableCursor((PieceTable<Base>.Cursor) table.iterator());
     }

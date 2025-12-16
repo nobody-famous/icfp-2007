@@ -18,24 +18,17 @@ public class PieceTable implements fuun.DNA {
     @Override
     public void append(DNA dna) {
         var toAppend = (PieceTable) dna;
-        var seg = new Segment(toAppend.head);
-        var first = seg;
-        var last = seg;
-        var loopCount = 0;
 
-        for (var dnaSeg = toAppend.head.getNext(); dnaSeg != null; dnaSeg = dnaSeg.getNext()) {
-            fuun.Utils.checkLoopCount("append", loopCount++);
-
-            seg.setNext(new Segment(dnaSeg));
-            seg = seg.getNext();
-            last = seg;
+        if (head == null) {
+            head = toAppend.head;
+            tail = toAppend.tail;
+        } else {
+            tail.setNext(toAppend.head);
+            tail = toAppend.tail;
         }
 
-        last.setNext(head);
-        if (tail == null) {
-            tail = last;
-        }
-        head = first;
+        toAppend.head = null;
+        toAppend.tail = null;
     }
 
     private void append(Segment seg) {
@@ -68,23 +61,29 @@ public class PieceTable implements fuun.DNA {
             return;
         }
 
-        var seg = new Segment(toPrepend.head);
-        var first = seg;
-        var last = seg;
-        var loopCount = 0;
+        toPrepend.tail.setNext(head);
+        head = toPrepend.head;
 
-        for (var dnaSeg = toPrepend.head.getNext(); dnaSeg != null; dnaSeg = dnaSeg.getNext()) {
-            fuun.Utils.checkLoopCount("prepend", loopCount++);
+        toPrepend.head = null;
+        toPrepend.tail = null;
 
-            seg.setNext(new Segment(dnaSeg));
-            seg = seg.getNext();
-            // if (seg != null) {
-            last = seg;
-            // }
-        }
+        // var seg = new Segment(toPrepend.head);
+        // var first = seg;
+        // var last = seg;
+        // var loopCount = 0;
 
-        last.setNext(head);
-        head = first;
+        // for (var dnaSeg = toPrepend.head.getNext(); dnaSeg != null; dnaSeg = dnaSeg.getNext()) {
+        //     fuun.Utils.checkLoopCount("prepend", loopCount++);
+
+        //     seg.setNext(new Segment(dnaSeg));
+        //     seg = seg.getNext();
+        //     // if (seg != null) {
+        //     last = seg;
+        //     // }
+        // }
+
+        // last.setNext(head);
+        // head = first;
     }
 
     @Override
