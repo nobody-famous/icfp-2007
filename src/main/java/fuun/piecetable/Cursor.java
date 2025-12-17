@@ -109,6 +109,7 @@ public class Cursor implements DNACursor {
 
         if (curIndex + offset <= curSegment.getLast()) {
             curIndex += offset;
+            prevSegment = curSegment;
             prevIndex = curIndex - 1;
             return;
         }
@@ -121,14 +122,21 @@ public class Cursor implements DNACursor {
             curIndex = curSegment != null ? curSegment.getFirst() : 0;
         }
 
-        if (curSegment != null) {
-            curIndex = curSegment.getFirst() + offset;
-            if (curIndex > 0) {
-                prevSegment = curSegment;
-                prevIndex = curIndex - 1;
-            } else {
-                prevIndex = prevSegment.getLast();
+        if (curSegment == null) {
+            if (offset > 0) {
+                prevSegment = null;
+                prevIndex = 0;
             }
+
+            return;
+        }
+
+        curIndex = curSegment.getFirst() + offset;
+        if (curIndex > 0) {
+            prevSegment = curSegment;
+            prevIndex = curIndex - 1;
+        } else {
+            prevIndex = prevSegment.getLast();
         }
     }
 }

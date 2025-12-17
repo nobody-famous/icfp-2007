@@ -66,24 +66,6 @@ public class PieceTable implements fuun.DNA {
 
         toPrepend.head = null;
         toPrepend.tail = null;
-
-        // var seg = new Segment(toPrepend.head);
-        // var first = seg;
-        // var last = seg;
-        // var loopCount = 0;
-
-        // for (var dnaSeg = toPrepend.head.getNext(); dnaSeg != null; dnaSeg = dnaSeg.getNext()) {
-        //     fuun.Utils.checkLoopCount("prepend", loopCount++);
-
-        //     seg.setNext(new Segment(dnaSeg));
-        //     seg = seg.getNext();
-        //     // if (seg != null) {
-        //     last = seg;
-        //     // }
-        // }
-
-        // last.setNext(head);
-        // head = first;
     }
 
     @Override
