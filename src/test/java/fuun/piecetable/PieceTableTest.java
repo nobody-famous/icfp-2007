@@ -91,6 +91,22 @@ public class PieceTableTest {
         runSlice(0, 8, "ICFPICFP");
         runSlice(0, 12, "ICFPICFPICFP");
         runSlice(2, 10, "FPICFPIC");
+
+        var table = new PieceTable();
+
+        table.append(new Base[] { Base.I });
+        table.append(new Base[] { Base.C });
+        table.append(new Base[] { Base.F });
+        table.append(new Base[] { Base.P });
+
+        var start = (Cursor) table.iterator();
+        var end = (Cursor) table.iterator();
+
+        start.skip(1);
+        end.skip(3);
+
+        var slice = table.slice(start, end);
+        assertEquals("CF", slice.toString());
     }
 
     private void runTruncate(int offset, String expected) {

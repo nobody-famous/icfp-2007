@@ -5,27 +5,39 @@ import fuun.DNACursor;
 
 public class Cursor implements DNACursor {
     private Segment curSegment;
-    private int index;
+    private int curIndex;
+    private Segment prevSegment;
+    private int prevIndex;
 
     public Cursor(Cursor copy) {
-        this(copy.curSegment, copy.index);
+        this(copy.curSegment, copy.curIndex, copy.prevSegment, copy.prevIndex);
     }
 
     public Cursor(Segment seg) {
-        this(seg, seg != null ? seg.getFirst() : 0);
+        this(seg, seg != null ? seg.getFirst() : 0, null, 0);
     }
 
-    public Cursor(Segment seg, int index) {
-        curSegment = seg;
-        this.index = index;
+    public Cursor(Segment curSeg, int curIndex, Segment prevSeg, int prevIndex) {
+        this.curSegment = curSeg;
+        this.curIndex = curIndex;
+        this.prevSegment = prevSeg;
+        this.prevIndex = prevIndex;
     }
 
-    Segment getSegment() {
+    Segment getCurSegment() {
         return curSegment;
     }
 
-    int getIndex() {
-        return index;
+    int getCurIndex() {
+        return curIndex;
+    }
+
+    Segment getPrevSegment() {
+        return prevSegment;
+    }
+
+    int getPrevIndex() {
+        return prevIndex;
     }
 
     @Override
@@ -40,7 +52,10 @@ public class Cursor implements DNACursor {
 
     @Override
     public boolean isValid() {
-        return curSegment != null && index >= curSegment.getFirst() && index <= curSegment.getLast();
+        var curValid = curSegment != null && curIndex >= curSegment.getFirst() && curIndex <= curSegment.getLast();
+        var prevValid = prevSegment != null && prevIndex >= prevSegment.getFirst()
+                && prevIndex <= prevSegment.getLast();
+        return curValid || prevValid;
     }
 
     @Override
@@ -48,12 +63,18 @@ public class Cursor implements DNACursor {
         var result = peek(0);
 
         if (result != Base.None) {
-            if (index + 1 > curSegment.getLast()) {
+            if (curIndex + 1 > curSegment.getLast()) {
+                prevSegment = curSegment;
+                prevIndex = prevSegment.getLast();
                 curSegment = curSegment.getNext();
-                index = (curSegment != null) ? curSegment.getFirst() : 0;
+                curIndex = (curSegment != null) ? curSegment.getFirst() : 0;
             } else {
-                index++;
+                prevIndex = curIndex;
+                curIndex++;
             }
+        } else {
+            prevSegment = null;
+            prevIndex = 0;
         }
 
         return result;
@@ -71,13 +92,13 @@ public class Cursor implements DNACursor {
         }
 
         var seg = curSegment;
-        while (seg != null && index + offset > seg.getLast()) {
-            offset -= (seg.getLast() - index + 1);
+        while (seg != null && curIndex + offset > seg.getLast()) {
+            offset -= (seg.getLast() - curIndex + 1);
             seg = seg.getNext();
-            index = seg != null ? seg.getFirst() : 0;
+            curIndex = seg != null ? seg.getFirst() : 0;
         }
 
-        return seg != null && index + offset <= seg.getLast() ? seg.get(index + offset) : Base.None;
+        return seg != null && curIndex + offset <= seg.getLast() ? seg.get(curIndex + offset) : Base.None;
     }
 
     @Override
@@ -86,19 +107,28 @@ public class Cursor implements DNACursor {
             throw new IllegalArgumentException();
         }
 
-        if (index + offset <= curSegment.getLast()) {
-            index += offset;
+        if (curIndex + offset <= curSegment.getLast()) {
+            curIndex += offset;
+            prevIndex = curIndex - 1;
             return;
         }
 
-        while (curSegment != null && index + offset > curSegment.getLast()) {
-            offset -= (curSegment.getLast() - index + 1);
+        while (curSegment != null && curIndex + offset > curSegment.getLast()) {
+            offset -= (curSegment.getLast() - curIndex + 1);
+            prevSegment = curSegment;
+            prevIndex = prevSegment.getLast();
             curSegment = curSegment.getNext();
-            index = curSegment != null ? curSegment.getFirst() : 0;
+            curIndex = curSegment != null ? curSegment.getFirst() : 0;
         }
 
         if (curSegment != null) {
-            index = curSegment.getFirst() + offset;
+            curIndex = curSegment.getFirst() + offset;
+            if (curIndex > 0) {
+                prevSegment = curSegment;
+                prevIndex = curIndex - 1;
+            } else {
+                prevIndex = prevSegment.getLast();
+            }
         }
     }
 }

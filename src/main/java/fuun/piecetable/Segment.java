@@ -14,6 +14,10 @@ public class Segment {
     }
 
     public Segment(Base[] bases, int start, int end) {
+        if (start < 0 || end < 0) {
+            throw new IllegalArgumentException();
+        }
+
         buffer = bases;
         first = start;
         last = end;

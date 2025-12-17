@@ -91,25 +91,31 @@ public class PieceTable implements fuun.DNA {
         var dna = new PieceTable();
         var startCursor = (Cursor) start;
         var endCursor = (Cursor) end;
-        var curSeg = startCursor.getSegment();
+        var curSeg = startCursor.getCurSegment();
+        var endSeg = endCursor.getPrevSegment();
+        var endIndex = endCursor.getPrevIndex();
+
+        if (curSeg == null) {
+            return dna;
+        }
 
         dna.append(new Segment(
                 curSeg.getBuffer(),
-                startCursor.getIndex(),
-                startCursor.getSegment() == endCursor.getSegment() ? endCursor.getIndex() - 1 : curSeg.getLast()));
+                startCursor.getCurIndex(),
+                curSeg == endSeg ? endIndex : curSeg.getLast()));
 
-        if (startCursor.getSegment() == endCursor.getSegment()) {
+        if (curSeg == endSeg) {
             return dna;
         }
 
         curSeg = curSeg.getNext();
-        while (curSeg != null && curSeg != endCursor.getSegment()) {
+        while (curSeg != null && curSeg != endSeg) {
             dna.append(new Segment(curSeg));
             curSeg = curSeg.getNext();
         }
 
-        if (curSeg != null && curSeg == endCursor.getSegment()) {
-            dna.append(new Segment(curSeg.getBuffer(), curSeg.getFirst(), endCursor.getIndex() - 1));
+        if (curSeg != null && curSeg == endSeg) {
+            dna.append(new Segment(endSeg.getBuffer(), endSeg.getFirst(), endIndex));
         }
 
         return dna;
@@ -123,7 +129,7 @@ public class PieceTable implements fuun.DNA {
     @Override
     public void truncate(DNACursor cursor) {
         var iter = (Cursor) cursor;
-        var cursorSeg = iter.getSegment();
+        var cursorSeg = iter.getCurSegment();
 
         if (cursorSeg == null) {
             head = null;
@@ -131,7 +137,7 @@ public class PieceTable implements fuun.DNA {
             return;
         }
 
-        var seg = new Segment(cursorSeg.getBuffer(), iter.getIndex(), cursorSeg.getLast());
+        var seg = new Segment(cursorSeg.getBuffer(), iter.getCurIndex(), cursorSeg.getLast());
 
         seg.setNext(cursorSeg.getNext());
         head = seg;

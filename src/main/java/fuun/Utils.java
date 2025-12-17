@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import fuun.piecetable.Cursor;
 import fuun.piecetable.PieceTable;
 
 public final class Utils {
@@ -65,8 +66,9 @@ public final class Utils {
     public static String dnaToString(fuun.DNA dna) {
         var builder = new StringBuilder();
         var cursor = (DNACursor) dna.iterator();
+        var size = dna.length();
 
-        builder.append("(" + dna.length() + ") ");
+        builder.append("(" + size + ") ");
         for (var count = 0; count < 20 && cursor.peek() != fuun.Base.None; count += 1) {
             builder.append(cursor.next());
         }
