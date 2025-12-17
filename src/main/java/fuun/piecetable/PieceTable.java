@@ -19,13 +19,17 @@ public class PieceTable implements fuun.DNA {
     public void append(DNA dna) {
         var toAppend = (PieceTable) dna;
 
+        if (toAppend.head == null) {
+            return;
+        }
+
         if (head == null) {
             head = toAppend.head;
-            tail = toAppend.tail;
         } else {
             tail.setNext(toAppend.head);
-            tail = toAppend.tail;
         }
+
+        tail = toAppend.tail;
 
         toAppend.head = null;
         toAppend.tail = null;
@@ -63,6 +67,9 @@ public class PieceTable implements fuun.DNA {
 
         toPrepend.tail.setNext(head);
         head = toPrepend.head;
+        if (tail == null) {
+            tail = toPrepend.tail;
+        }
 
         toPrepend.head = null;
         toPrepend.tail = null;
