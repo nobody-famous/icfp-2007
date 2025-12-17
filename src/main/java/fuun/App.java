@@ -10,8 +10,8 @@ import fuun.dna.Replacer;
 import fuun.dna.TemplateDecoder;
 
 public class App {
-    private static final int MAX_ITERATIONS = 21;
-    private static final int DEBUG_INTERVAL = 1;
+    private static final int MAX_ITERATIONS = 110;
+    private static final int DEBUG_INTERVAL = 10;
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
@@ -27,7 +27,7 @@ public class App {
     }
 
     private static boolean doDebugPrint(int iteration) {
-        return (iteration % DEBUG_INTERVAL == 0);
+        return (iteration % DEBUG_INTERVAL == 0 || iteration > 100);
     }
 
     private static String readFile(String name) throws Exception {
@@ -49,10 +49,12 @@ public class App {
     }
 
     private static void execute(fuun.DNA dna) {
+        var iteration = 0;
+
         try {
             var startTime = System.nanoTime();
 
-            for (var iteration = 0; iteration < MAX_ITERATIONS; iteration += 1) {
+            for (iteration = 0; iteration < MAX_ITERATIONS; iteration += 1) {
                 if (doDebugPrint(iteration)) {
                     System.out.println("Iteration: " + iteration + " " + getDuration(startTime) + " ms");
                     System.out.println("DNA: " + Utils.dnaToString(dna));
@@ -83,7 +85,7 @@ public class App {
                 }
             }
         } catch (Finished ex) {
-            System.out.println("Finished called " + ex);
+            System.out.println("Finished called after " + iteration);
         }
     }
 }

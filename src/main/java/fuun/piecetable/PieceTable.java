@@ -12,6 +12,9 @@ public class PieceTable implements fuun.DNA {
 
     @Override
     public void append(Base[] bases) {
+        if (bases.length == 0) {
+            return;
+        }
         append(new Segment(bases, 0, bases.length - 1));
     }
 
@@ -104,7 +107,9 @@ public class PieceTable implements fuun.DNA {
         }
 
         if (curSeg != null && curSeg == endSeg) {
-            dna.append(new Segment(endSeg.getBuffer(), endSeg.getFirst(), endIndex));
+            if (endIndex >= endSeg.getFirst()) {
+                dna.append(new Segment(endSeg.getBuffer(), endSeg.getFirst(), endIndex));
+            }
         }
 
         return dna;

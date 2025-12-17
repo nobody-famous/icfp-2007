@@ -82,7 +82,8 @@ public class StringDNA implements DNA {
 
     @Override
     public void append(DNA dna) {
-        throw new RuntimeException("StringDNA.append not done yet");
+        var toAppend = (StringDNA) dna;
+        append(toAppend.bases);
     }
 
     @Override

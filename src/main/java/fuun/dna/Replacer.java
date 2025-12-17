@@ -12,18 +12,18 @@ public class Replacer {
         for (var item : template.getItems()) {
             switch (item) {
                 case Template.Base baseItem:
-                    fuun.Utils.timer("base", () -> result.append(new fuun.Base[] { baseItem.base() }));
+                    result.append(new fuun.Base[] { baseItem.base() });
                     break;
                 case Template.Protect protectItem: {
                     var envItem = getEnvItem(env, protectItem.reference());
                     if (envItem != null) {
-                        fuun.Utils.timer("protect", () -> result.append(protect(envItem, protectItem.level())));
+                        result.append(protect(envItem, protectItem.level()));
                     }
                     break;
                 }
                 case Template.Length lengthItem: {
                     var envItem = getEnvItem(env, lengthItem.reference());
-                    fuun.Utils.timer("length", () -> result.append(asnat(envItem == null ? 0 : envItem.length())));
+                    result.append(asnat(envItem == null ? 0 : envItem.length()));
                     break;
                 }
                 default:

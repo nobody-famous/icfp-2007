@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import fuun.piecetable.Cursor;
-import fuun.piecetable.PieceTable;
-
 public final class Utils {
     private Utils() {
     }
@@ -17,7 +14,7 @@ public final class Utils {
 
     public static DNA createDNA() {
         // return new TableDNA();
-        return new PieceTable();
+        return new fuun.piecetable.PieceTable();
         // return new StringDNA();
     }
 
