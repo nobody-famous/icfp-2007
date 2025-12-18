@@ -1,28 +1,50 @@
 package fuun.dna;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fuun.DNACursor;
 import fuun.Finished;
 
 public class TemplateDecoder extends Decoder<Template> {
+    private List<fuun.Base> bases = new ArrayList<>();
+
     @Override
     void reset() {
         result = new Template();
+        bases.clear();
     }
 
     @Override
     void handlePrefix(DNACursor cursor, Prefix prefix) throws Finished {
         switch (prefix) {
             case Prefix.C:
-                result.add(new Template.Base(fuun.Base.I));
+                bases.add(fuun.Base.I);
                 break;
             case Prefix.F:
-                result.add(new Template.Base(fuun.Base.C));
+                bases.add(fuun.Base.C);
                 break;
             case Prefix.P:
-                result.add(new Template.Base(fuun.Base.F));
+                bases.add(fuun.Base.F);
                 break;
             case Prefix.IC:
-                result.add(new Template.Base(fuun.Base.P));
+                bases.add(fuun.Base.P);
+                break;
+            case Prefix.None:
+                throw new Finished();
+            default:
+                if (!bases.isEmpty()) {
+                    result.add(new Template.Base(bases.toArray(new fuun.Base[bases.size()])));
+                    bases.clear();
+                }
+                break;
+        }
+
+        switch (prefix) {
+            case Prefix.C:
+            case Prefix.F:
+            case Prefix.P:
+            case Prefix.IC:
                 break;
             case Prefix.IF:
             case Prefix.IP: {

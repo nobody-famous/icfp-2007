@@ -28,20 +28,12 @@ public class MatcherTest {
     void testBases() {
         runTest("ICFP",
                 new Pattern()
-                        .add(new Pattern.Base(fuun.Base.I))
-                        .add(new Pattern.Base(fuun.Base.C))
-                        .add(new Pattern.Base(fuun.Base.F))
-                        .add(new Pattern.Base(fuun.Base.P)),
+                        .add(new Pattern.Base(new fuun.Base[] { fuun.Base.I, fuun.Base.C, fuun.Base.F, fuun.Base.P })),
                 true, "", new ArrayList<>());
         runTest("ICFP",
                 new Pattern()
-                        .add(new Pattern.Base(fuun.Base.I))
-                        .add(new Pattern.Base(fuun.Base.C))
-                        .add(new Pattern.Base(fuun.Base.P))
-                        .add(new Pattern.Base(fuun.Base.I)),
-                false,
-                "ICFP",
-                new ArrayList<>());
+                        .add(new Pattern.Base(new fuun.Base[] { fuun.Base.I, fuun.Base.F, fuun.Base.F, fuun.Base.P })),
+                false, "ICFP", new ArrayList<>());
     }
 
     @Test

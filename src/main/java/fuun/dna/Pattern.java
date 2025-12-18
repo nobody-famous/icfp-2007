@@ -7,10 +7,16 @@ public class Pattern {
     public static sealed interface Item permits Base, Skip, Search, Open, Close {
     }
 
-    public static record Base(fuun.Base base) implements Item {
+    public static record Base(fuun.Base[] bases) implements Item {
         @Override
         public final String toString() {
-            return "" + base;
+            var builder = new StringBuilder();
+
+            for (var base : bases) {
+                builder.append(base);
+            }
+
+            return builder.toString();
         }
     }
 

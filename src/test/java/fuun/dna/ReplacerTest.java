@@ -16,10 +16,7 @@ public class ReplacerTest {
     @Test
     void testBases() {
         runTest(new Template()
-                .add(new Template.Base(fuun.Base.I))
-                .add(new Template.Base(fuun.Base.C))
-                .add(new Template.Base(fuun.Base.F))
-                .add(new Template.Base(fuun.Base.P)),
+                .add(new Template.Base(new fuun.Base[] { fuun.Base.I, fuun.Base.C, fuun.Base.F, fuun.Base.P })),
                 List.of(),
                 "ICFP");
     }

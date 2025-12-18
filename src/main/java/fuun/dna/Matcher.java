@@ -13,9 +13,7 @@ public class Matcher {
         for (var item : pattern.getItems()) {
             switch (item) {
                 case Pattern.Base baseItem:
-                    if (cursor.peek() == baseItem.base()) {
-                        cursor.skip(1);
-                    } else {
+                    if (!matchBases(baseItem, cursor)) {
                         return false;
                     }
                     break;
@@ -45,6 +43,18 @@ public class Matcher {
         }
 
         dna.truncate(cursor);
+
+        return true;
+    }
+
+    private boolean matchBases(Pattern.Base baseItem, DNACursor cursor) {
+        for (var base : baseItem.bases()) {
+            if (cursor.peek() != base) {
+                return false;
+            }
+
+            cursor.skip(1);
+        }
 
         return true;
     }

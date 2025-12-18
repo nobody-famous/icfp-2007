@@ -12,7 +12,7 @@ public class Replacer {
         for (var item : template.getItems()) {
             switch (item) {
                 case Template.Base baseItem:
-                    result.append(new fuun.Base[] { baseItem.base() });
+                    result.append(baseItem.bases());
                     break;
                 case Template.Protect protectItem: {
                     var envItem = getEnvItem(env, protectItem.reference());
