@@ -72,5 +72,7 @@ public class MatcherTest {
                 new Pattern().add(new Pattern.Skip(1)).add(new Pattern.Open()).add(new Pattern.Skip(2))
                         .add(new Pattern.Close()),
                 true, "P", List.of(fuun.Utils.stringToDNA("CF")));
+        runTest("ICFP", new Pattern().add(new Pattern.Open()).add(new Pattern.Close()), true,
+                "ICFP", List.of(fuun.Utils.stringToDNA("")));
     }
 }

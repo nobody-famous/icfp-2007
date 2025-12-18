@@ -18,6 +18,18 @@ public class PieceTable implements fuun.DNA {
         append(new Segment(bases, 0, bases.length - 1));
     }
 
+    private Segment[] copySegments(Segment start) {
+        var first = new Segment(start);
+        var last = first;
+
+        for (var seg = start.getNext(); seg != null; seg = seg.getNext()) {
+            last.setNext(new Segment(seg));
+            last = last.getNext();
+        }
+
+        return new Segment[] { first, last };
+    }
+
     @Override
     public void append(DNA dna) {
         var toAppend = (PieceTable) dna;
@@ -26,16 +38,15 @@ public class PieceTable implements fuun.DNA {
             return;
         }
 
-        if (head == null) {
-            head = toAppend.head;
+        var segs = copySegments(toAppend.head);
+
+        if (tail == null) {
+            head = segs[0];
+            tail = segs[1];
         } else {
-            tail.setNext(toAppend.head);
+            tail.setNext(segs[0]);
+            tail = segs[1];
         }
-
-        tail = toAppend.tail;
-
-        toAppend.head = null;
-        toAppend.tail = null;
     }
 
     private void append(Segment seg) {
@@ -68,14 +79,15 @@ public class PieceTable implements fuun.DNA {
             return;
         }
 
-        toPrepend.tail.setNext(head);
-        head = toPrepend.head;
-        if (tail == null) {
-            tail = toPrepend.tail;
-        }
+        var segs = copySegments(toPrepend.head);
 
-        toPrepend.head = null;
-        toPrepend.tail = null;
+        if (head == null) {
+            head = segs[0];
+            tail = segs[1];
+        } else {
+            segs[1].setNext(head);
+            head = segs[0];
+        }
     }
 
     @Override
@@ -87,7 +99,8 @@ public class PieceTable implements fuun.DNA {
         var endSeg = endCursor.getPrevSegment();
         var endIndex = endCursor.getPrevIndex();
 
-        if (curSeg == null) {
+        if (curSeg == null
+                || (curSeg == endCursor.getCurSegment() && endCursor.getCurIndex() == startCursor.getCurIndex())) {
             return dna;
         }
 

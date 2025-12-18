@@ -9,7 +9,7 @@ public final class Utils {
     private Utils() {
     }
 
-    private static final int MAX_LOOP_COUNT = 10_000_000;
+    private static final int MAX_LOOP_COUNT = 100_000_000;
     // private static final int MAX_LOOP_COUNT = 100;
 
     public static DNA createDNA() {

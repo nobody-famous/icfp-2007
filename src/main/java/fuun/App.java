@@ -10,8 +10,8 @@ import fuun.dna.Replacer;
 import fuun.dna.TemplateDecoder;
 
 public class App {
-    private static final int MAX_ITERATIONS = 110;
-    private static final int DEBUG_INTERVAL = 10;
+    private static final int MAX_ITERATIONS = 2_000_000;
+    private static final int DEBUG_INTERVAL = 10_000;
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
@@ -27,7 +27,7 @@ public class App {
     }
 
     private static boolean doDebugPrint(int iteration) {
-        return (iteration % DEBUG_INTERVAL == 0 || iteration > 100);
+        return (iteration % DEBUG_INTERVAL == 0);
     }
 
     private static String readFile(String name) throws Exception {
@@ -77,6 +77,9 @@ public class App {
                     }
 
                     var newDNA = new Replacer().replace(template, env);
+                    if (doDebugPrint(iteration)) {
+                        System.out.println("Prepend " + Utils.dnaToString(newDNA));
+                    }
                     dna.prepend(newDNA);
                 }
 
