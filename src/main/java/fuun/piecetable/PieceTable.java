@@ -7,15 +7,15 @@ import fuun.DNA;
 import fuun.DNACursor;
 
 public class PieceTable implements fuun.DNA {
-    private Segment head = null;
-    private Segment tail = null;
+    protected Segment head = null;
+    protected Segment tail = null;
 
     @Override
     public void append(Base[] bases) {
         if (bases.length == 0) {
             return;
         }
-        append(new Segment(bases, 0, bases.length - 1));
+        append(new Buffer(bases, 0, bases.length - 1));
     }
 
     private Segment[] copySegments(Segment start) {
@@ -49,15 +49,15 @@ public class PieceTable implements fuun.DNA {
         }
     }
 
-    private void append(Segment seg) {
+    private void append(Buffer buf) {
+        var seg = new Segment(buf);
+
         if (head == null) {
             head = seg;
-            tail = seg;
-            return;
+        } else {
+            tail.setNext(seg);
         }
 
-        seg.setPrev(tail);
-        tail.setNext(seg);
         tail = seg;
     }
 
@@ -66,7 +66,7 @@ public class PieceTable implements fuun.DNA {
         var result = 0;
 
         for (var seg = head; seg != null; seg = seg.getNext()) {
-            result += (seg.getLast() - seg.getFirst() + 1);
+            result += seg.getBuffer().length();
         }
 
         return result;
@@ -93,44 +93,44 @@ public class PieceTable implements fuun.DNA {
     @Override
     public DNA slice(DNACursor start, DNACursor end) {
         var dna = new PieceTable();
-        var startCursor = (Cursor) start;
-        var endCursor = (Cursor) end;
-        var curSeg = startCursor.getCurSegment();
-        var endSeg = endCursor.getPrevSegment();
-        var endIndex = endCursor.getPrevIndex();
+        // var startCursor = (Cursor) start;
+        // var endCursor = (Cursor) end;
+        // var curSeg = startCursor.getCurSegment();
+        // var endSeg = endCursor.getPrevSegment();
+        // var endIndex = endCursor.getPrevIndex();
 
-        if (curSeg == null
-                || (curSeg == endCursor.getCurSegment() && endCursor.getCurIndex() == startCursor.getCurIndex())) {
-            return dna;
-        }
+        // if (curSeg == null
+        //         || (curSeg == endCursor.getCurSegment() && endCursor.getCurIndex() == startCursor.getCurIndex())) {
+        //     return dna;
+        // }
 
-        dna.append(new Segment(
-                curSeg.getBuffer(),
-                startCursor.getCurIndex(),
-                curSeg == endSeg ? endIndex : curSeg.getLast()));
+        // dna.append(new Segment(
+        //         curSeg.getBuffer(),
+        //         startCursor.getCurIndex(),
+        //         curSeg == endSeg ? endIndex : curSeg.getLast()));
 
-        if (curSeg == endSeg) {
-            return dna;
-        }
+        // if (curSeg == endSeg) {
+        //     return dna;
+        // }
 
-        curSeg = curSeg.getNext();
-        while (curSeg != null && curSeg != endSeg) {
-            dna.append(new Segment(curSeg));
-            curSeg = curSeg.getNext();
-        }
+        // curSeg = curSeg.getNext();
+        // while (curSeg != null && curSeg != endSeg) {
+        //     dna.append(new Segment(curSeg));
+        //     curSeg = curSeg.getNext();
+        // }
 
-        if (curSeg != null && curSeg == endSeg) {
-            if (endIndex >= endSeg.getFirst()) {
-                dna.append(new Segment(endSeg.getBuffer(), endSeg.getFirst(), endIndex));
-            }
-        }
+        // if (curSeg != null && curSeg == endSeg) {
+        //     if (endIndex >= endSeg.getFirst()) {
+        //         dna.append(new Segment(endSeg.getBuffer(), endSeg.getFirst(), endIndex));
+        //     }
+        // }
 
         return dna;
     }
 
     @Override
     public Iterator<Base> iterator() {
-        return new Cursor(head);
+        return new Cursor(this, head);
     }
 
     @Override
@@ -144,7 +144,9 @@ public class PieceTable implements fuun.DNA {
             return;
         }
 
-        var seg = new Segment(cursorSeg.getBuffer(), iter.getCurIndex(), cursorSeg.getLast());
+        var oldBuf = cursorSeg.getBuffer();
+        var newBuf = new Buffer(oldBuf.data(), oldBuf.first() + iter.getCurIndex(), oldBuf.last());
+        var seg = new Segment(newBuf);
 
         seg.setNext(cursorSeg.getNext());
         head = seg;

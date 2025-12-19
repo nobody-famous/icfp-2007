@@ -3,40 +3,24 @@ package fuun.piecetable;
 import fuun.Base;
 
 public class Segment {
-    private Base[] buffer;
-    private int first;
-    private int last;
+    private Buffer buffer;
     private Segment prev;
     private Segment next;
 
     public Segment(Segment copy) {
-        this(copy.buffer, copy.first, copy.last);
+        this(copy.buffer);
     }
 
-    public Segment(Base[] bases, int start, int end) {
-        if (start < 0 || end < 0) {
-            throw new IllegalArgumentException();
-        }
-
-        buffer = bases;
-        first = start;
-        last = end;
+    public Segment(Buffer buffer) {
+        this.buffer = buffer;
     }
 
     public Base get(int index) {
-        return (index >= first && index <= last) ? buffer[index] : Base.None;
+        return buffer.get(index);
     }
 
-    public Base[] getBuffer() {
+    public Buffer getBuffer() {
         return buffer;
-    }
-
-    public int getFirst() {
-        return first;
-    }
-
-    public int getLast() {
-        return last;
     }
 
     public Segment getPrev() {
