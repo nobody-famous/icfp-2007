@@ -15,7 +15,7 @@
             "type": "shell",
             "command": "mvn",
             "linux": {
-                "args": ["clean", "-Dtest=MatcherTest#testSkip", "test"]
+                "args": ["clean", "-Dtest=fuun.piecetable.PieceTableTest#testSlice", "test"]
             },
             "windows": {
                 "args": ["clean", "-Dtest='fuun.piecetable.PieceTableTest#testTruncate'", "test"]

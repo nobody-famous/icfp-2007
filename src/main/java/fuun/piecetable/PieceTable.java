@@ -92,38 +92,30 @@ public class PieceTable implements fuun.DNA {
 
     @Override
     public DNA slice(DNACursor start, DNACursor end) {
+        var startCursor = (Cursor) start;
+        var endCursor = (Cursor) end;
         var dna = new PieceTable();
-        // var startCursor = (Cursor) start;
-        // var endCursor = (Cursor) end;
-        // var curSeg = startCursor.getCurSegment();
-        // var endSeg = endCursor.getPrevSegment();
-        // var endIndex = endCursor.getPrevIndex();
+        var buf = startCursor.getCurSegment().getBuffer();
 
-        // if (curSeg == null
-        //         || (curSeg == endCursor.getCurSegment() && endCursor.getCurIndex() == startCursor.getCurIndex())) {
-        //     return dna;
-        // }
+        if (startCursor.getCurSegment() == endCursor.getCurSegment()) {
+            var endIndex = endCursor.getCurIndex() - 1;
 
-        // dna.append(new Segment(
-        //         curSeg.getBuffer(),
-        //         startCursor.getCurIndex(),
-        //         curSeg == endSeg ? endIndex : curSeg.getLast()));
+            dna.append(new Buffer(buf.data(), buf.first() + startCursor.getCurIndex(), buf.first() + endIndex));
 
-        // if (curSeg == endSeg) {
-        //     return dna;
-        // }
+            return dna;
+        }
 
-        // curSeg = curSeg.getNext();
-        // while (curSeg != null && curSeg != endSeg) {
-        //     dna.append(new Segment(curSeg));
-        //     curSeg = curSeg.getNext();
-        // }
+        dna.append(new Buffer(buf.data(), startCursor.getCurIndex(), buf.length() - 1));
 
-        // if (curSeg != null && curSeg == endSeg) {
-        //     if (endIndex >= endSeg.getFirst()) {
-        //         dna.append(new Segment(endSeg.getBuffer(), endSeg.getFirst(), endIndex));
-        //     }
-        // }
+        var seg = startCursor.getCurSegment().getNext();
+        for (seg = startCursor.getCurSegment().getNext(); seg != endCursor.getCurSegment(); seg = seg.getNext()) {
+            dna.append(seg.getBuffer());
+        }
+
+        if (seg != null && endCursor.getCurIndex() > 0) {
+            buf = endCursor.getCurSegment().getBuffer();
+            dna.append(new Buffer(buf.data(), buf.first(), buf.first() + endCursor.getCurIndex() - 1));
+        }
 
         return dna;
     }

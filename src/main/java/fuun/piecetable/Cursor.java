@@ -99,14 +99,14 @@ public class Cursor implements DNACursor {
             throw new IllegalArgumentException();
         }
 
-        if (curIndex + offset <= curSegment.getBuffer().length()) {
+        if (curIndex + offset < curSegment.getBuffer().length()) {
             curIndex += offset;
             prevSegment = curSegment;
             return;
         }
 
         while (curSegment != null && curSegment.get(curIndex + offset) == Base.None) {
-            offset -= (curSegment.getBuffer().length() - curIndex + 1);
+            offset -= (curSegment.getBuffer().length() - curIndex);
             prevSegment = curSegment;
             curSegment = curSegment.getNext();
             curIndex = 0;
