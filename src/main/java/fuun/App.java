@@ -10,7 +10,7 @@ import fuun.dna.Replacer;
 import fuun.dna.TemplateDecoder;
 
 public class App {
-    private static final int MAX_ITERATIONS = 11;
+    private static final int MAX_ITERATIONS = 2;
     private static final int DEBUG_INTERVAL = 1;
 
     public static void main(String[] args) throws Exception {

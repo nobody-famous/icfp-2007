@@ -84,13 +84,14 @@ public class Cursor implements DNACursor {
         }
 
         var seg = curSegment;
-        while (seg != null && seg.get(curIndex + offset) == Base.None) {
-            offset -= (seg.getBuffer().length() - curIndex + 1);
+        var index = curIndex;
+        while (seg != null && seg.get(index + offset) == Base.None) {
+            offset -= (seg.getBuffer().length() - index);
             seg = seg.getNext();
-            curIndex = 0;
+            index = 0;
         }
 
-        return seg != null ? seg.get(curIndex + offset) : Base.None;
+        return seg != null ? seg.get(index + offset) : Base.None;
     }
 
     @Override

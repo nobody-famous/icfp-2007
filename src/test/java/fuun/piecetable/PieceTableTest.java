@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import fuun.Base;
+import fuun.Utils;
 
 public class PieceTableTest {
     private PieceTable createTestTable() {
@@ -123,6 +124,8 @@ public class PieceTableTest {
         table.truncate(cursor);
 
         assertEquals(expected, table.toString());
+        assertEquals(String.format("(%d) %s", expected.length(),
+                expected.subSequence(0, Math.min(20, expected.length()))), Utils.dnaToString(table));
     }
 
     @Test
@@ -136,5 +139,16 @@ public class PieceTableTest {
         runTruncate(14, "PP");
         runTruncate(16, "");
         runTruncate(18, "");
+    }
+
+    @Test
+    void testPeek() {
+        var table = createTestTable();
+        var cursor = (Cursor) table.iterator();
+
+        assertEquals(Base.I, cursor.peek(4));
+        assertEquals(Base.I, cursor.peek(8));
+        assertEquals(Base.F, cursor.peek(10));
+        assertEquals(Base.None, cursor.peek(12));
     }
 }
