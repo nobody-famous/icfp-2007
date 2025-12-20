@@ -8,7 +8,7 @@ import fuun.Base;
 import fuun.Utils;
 
 public class PieceTableTest {
-    private PieceTable createTestTable() {
+    private PieceTable createIcfpTestTable() {
         var table = new PieceTable();
 
         table.append(new Base[] { Base.I, Base.C, Base.F, Base.P });
@@ -18,9 +18,20 @@ public class PieceTableTest {
         return table;
     }
 
+    private PieceTable createIiiiTestTable() {
+        var table = new PieceTable();
+
+        table.append(new Base[] { Base.I, Base.I, Base.I, Base.I });
+        table.append(new Base[] { Base.C, Base.C, Base.C, Base.C });
+        table.append(new Base[] { Base.F, Base.F, Base.F, Base.F });
+        table.append(new Base[] { Base.P, Base.P, Base.P, Base.P });
+
+        return table;
+    }
+
     @Test
     void testAppend() {
-        var table = createTestTable();
+        var table = createIcfpTestTable();
 
         assertEquals("ICFPICFPICFP", table.toString());
 
@@ -30,7 +41,7 @@ public class PieceTableTest {
         table.append(fuun.Utils.stringToDNA("CCCC"));
         table.append(fuun.Utils.stringToDNA("FFFF"));
         table.append(fuun.Utils.stringToDNA("PPPP"));
-        table.append(createTestTable());
+        table.append(createIcfpTestTable());
 
         assertEquals("IIIICCCCFFFFPPPPICFPICFPICFP", table.toString());
     }
@@ -53,7 +64,7 @@ public class PieceTableTest {
     }
 
     private void runSkip(int offset, Base expected) {
-        var table = createTestTable();
+        var table = createIcfpTestTable();
         var cursor = (Cursor) table.iterator();
 
         cursor.skip(offset);
@@ -73,7 +84,7 @@ public class PieceTableTest {
     }
 
     private void runSlice(int startSkip, int endSkip, String expected) {
-        var table = createTestTable();
+        var table = createIcfpTestTable();
         var startCursor = (Cursor) table.iterator();
         var endCursor = (Cursor) table.iterator();
 
@@ -111,13 +122,7 @@ public class PieceTableTest {
     }
 
     private void runTruncate(int offset, String expected) {
-        var table = new PieceTable();
-
-        table.append(new Base[] { Base.I, Base.I, Base.I, Base.I });
-        table.append(new Base[] { Base.C, Base.C, Base.C, Base.C });
-        table.append(new Base[] { Base.F, Base.F, Base.F, Base.F });
-        table.append(new Base[] { Base.P, Base.P, Base.P, Base.P });
-
+        var table = createIiiiTestTable();
         var cursor = (Cursor) table.iterator();
 
         cursor.skip(offset);
@@ -143,12 +148,28 @@ public class PieceTableTest {
 
     @Test
     void testPeek() {
-        var table = createTestTable();
+        var table = createIcfpTestTable();
         var cursor = (Cursor) table.iterator();
 
         assertEquals(Base.I, cursor.peek(4));
         assertEquals(Base.I, cursor.peek(8));
         assertEquals(Base.F, cursor.peek(10));
         assertEquals(Base.None, cursor.peek(12));
+    }
+
+    @Test
+    void testSlicePrepend() {
+        var table = createIiiiTestTable();
+        var start = (Cursor) table.iterator();
+        var end = (Cursor) table.iterator();
+
+        start.skip(2);
+        end.skip(8);
+
+        var slice = table.slice(start, end);
+        table.prepend(slice);
+
+        assertEquals("IICCCCIIIICCCCFFFFPPPP", table.toString());
+        assertEquals(Base.I, table.iterator().next());
     }
 }
