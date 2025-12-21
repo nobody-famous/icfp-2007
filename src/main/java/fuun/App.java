@@ -11,7 +11,7 @@ import fuun.dna.TemplateDecoder;
 
 public class App {
     private static final int MAX_ITERATIONS = 2_000_000;
-    private static final int DEBUG_INTERVAL = 100_000;
+    private static final int DEBUG_INTERVAL = 1_000_000;
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
@@ -27,7 +27,8 @@ public class App {
     }
 
     private static boolean doDebugPrint(int iteration) {
-        return (iteration % DEBUG_INTERVAL == 0);
+        // return (iteration % DEBUG_INTERVAL == 0);
+        return false;
     }
 
     private static String readFile(String name) throws Exception {

@@ -88,9 +88,16 @@ public class PieceTable implements fuun.DNA {
     @Override
     public int length() {
         var result = 0;
+        var segCount = 0;
 
         for (var seg = head; seg != null; seg = seg.getNext()) {
+            segCount++;
             result += seg.getBuffer().length();
+        }
+
+        if (segCount > fuun.Utils.SEGMENT_LIMIT) {
+            head = collapse(head);
+            tail = head;
         }
 
         return result;
