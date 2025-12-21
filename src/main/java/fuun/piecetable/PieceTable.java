@@ -18,13 +18,37 @@ public class PieceTable implements fuun.DNA {
         append(new Buffer(bases, 0, bases.length - 1));
     }
 
+    private Segment collapse(Segment start) {
+        var size = 0;
+        for (var seg = start; seg != null; seg = seg.getNext()) {
+            size += seg.getBuffer().length();
+        }
+
+        var bases = new Base[size];
+        var index = 0;
+        for (var seg = start; seg != null; seg = seg.getNext()) {
+            var buf = seg.getBuffer();
+            System.arraycopy(buf.data(), buf.first(), bases, index, buf.length());
+            index += buf.length();
+        }
+
+        return new Segment(new Buffer(bases, 0, bases.length - 1));
+    }
+
     private Segment[] copySegments(Segment start) {
         var first = new Segment(start);
         var last = first;
+        var segCount = 1;
 
         for (var seg = start.getNext(); seg != null; seg = seg.getNext()) {
+            segCount++;
             last.setNext(new Segment(seg));
             last = last.getNext();
+        }
+
+        if (segCount > fuun.Utils.SEGMENT_LIMIT) {
+            var seg = collapse(start);
+            return new Segment[] { seg, seg };
         }
 
         return new Segment[] { first, last };

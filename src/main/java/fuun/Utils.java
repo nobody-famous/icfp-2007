@@ -11,6 +11,7 @@ public final class Utils {
 
     private static final int MAX_LOOP_COUNT = 100_000_000;
     // private static final int MAX_LOOP_COUNT = 100;
+    public static final int SEGMENT_LIMIT = 200;
 
     public static DNA createDNA() {
         // return new TableDNA();
@@ -81,8 +82,8 @@ public final class Utils {
 
     private static Map<String, Long> times = new HashMap<>();
 
-    private static void updateTime(String label, long value) {
-        times.put(label, times.getOrDefault(label, 0L) + value);
+    public static void updateTime(String label, long start) {
+        times.put(label, times.getOrDefault(label, 0L) + (System.nanoTime() - start));
     }
 
     public static <T> T timer(String label, Supplier<T> fn) {
@@ -91,7 +92,7 @@ public final class Utils {
         try {
             return fn.get();
         } finally {
-            updateTime(label, System.nanoTime() - startTime);
+            updateTime(label, startTime);
         }
     }
 
@@ -101,7 +102,7 @@ public final class Utils {
         try {
             fn.run();
         } finally {
-            updateTime(label, System.nanoTime() - startTime);
+            updateTime(label, startTime);
         }
     }
 
