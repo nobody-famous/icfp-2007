@@ -10,14 +10,14 @@ import org.junit.jupiter.api.Test;
 import fuun.Base;
 
 public class MatcherTest {
-    private void runTest(String input, Pattern pattern, boolean shouldMatch, String dnaResult,
+    private void runTest(String input, Pattern pattern, boolean shouldMatch, String expectedDNA,
             List<fuun.DNA> expectedEnv) {
         var dna = fuun.Utils.createDNA(fuun.Utils.stringToBases(input));
         var env = new ArrayList<fuun.DNA>();
         var matched = new Matcher().match(dna, pattern, env);
 
         assertEquals(shouldMatch, matched);
-        assertEquals(dnaResult, dna.toString());
+        assertEquals(expectedDNA, dna.toString());
         assertEquals(expectedEnv.size(), env.size());
         for (var index = 0; index < env.size(); index += 1) {
             assertEquals(expectedEnv.get(index).toString(), env.get(index).toString());

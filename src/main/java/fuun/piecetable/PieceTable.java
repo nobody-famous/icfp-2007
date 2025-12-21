@@ -98,6 +98,10 @@ public class PieceTable implements fuun.DNA {
         var buf = startCursor.getCurSegment().getBuffer();
 
         if (startCursor.getCurSegment() == endCursor.getCurSegment()) {
+            if (startCursor.getCurIndex() == endCursor.getCurIndex()) {
+                return dna;
+            }
+
             var endIndex = endCursor.getCurIndex() - 1;
 
             dna.append(new Buffer(buf.data(), buf.first() + startCursor.getCurIndex(), buf.first() + endIndex));
@@ -105,7 +109,7 @@ public class PieceTable implements fuun.DNA {
             return dna;
         }
 
-        dna.append(new Buffer(buf.data(), startCursor.getCurIndex(), buf.length() - 1));
+        dna.append(new Buffer(buf.data(), buf.first() + startCursor.getCurIndex(), buf.last()));
 
         var seg = startCursor.getCurSegment().getNext();
         for (seg = startCursor.getCurSegment().getNext(); seg != endCursor.getCurSegment(); seg = seg.getNext()) {
