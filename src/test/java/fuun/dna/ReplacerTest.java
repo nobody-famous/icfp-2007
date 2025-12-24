@@ -1,0 +1,55 @@
+package fuun.dna;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class ReplacerTest {
+    private void runTest(fuun.dna.Template template, List<fuun.DNA> env, String expected) {
+        var result = new Replacer().replace(template, env);
+
+        assertEquals(expected, result.toString());
+    }
+
+    @Test
+    void testBases() {
+        runTest(new Template()
+                .add(new Template.Base(new fuun.Base[] { fuun.Base.I, fuun.Base.C, fuun.Base.F, fuun.Base.P })),
+                List.of(),
+                "ICFP");
+    }
+
+    @Test
+    void testProtect() {
+        runTest(new Template()
+                .add(new Template.Protect(2, 0)),
+                List.of(fuun.Utils.stringToDNA("ICFP")),
+                "");
+        runTest(new Template()
+                .add(new Template.Protect(0, 0)),
+                List.of(fuun.Utils.stringToDNA("ICFP")),
+                "ICFP");
+        runTest(new Template()
+                .add(new Template.Protect(0, 1)),
+                List.of(fuun.Utils.stringToDNA("PCF")),
+                "ICFP");
+        runTest(new Template()
+                .add(new Template.Protect(0, 2)),
+                List.of(fuun.Utils.stringToDNA("FIC")),
+                "ICFP");
+    }
+
+    @Test
+    void testLength() {
+        runTest(new Template()
+                .add(new Template.Length(0)),
+                List.of(fuun.Utils.stringToDNA("ICFP")),
+                "IICP");
+        runTest(new Template()
+                .add(new Template.Length(2)),
+                List.of(fuun.Utils.stringToDNA("ICFP")),
+                "P");
+    }
+}
