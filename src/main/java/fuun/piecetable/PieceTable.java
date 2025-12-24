@@ -5,6 +5,7 @@ import java.util.Iterator;
 import fuun.Base;
 import fuun.DNA;
 import fuun.DNACursor;
+import fuun.utils.Buffer;
 
 public class PieceTable implements fuun.DNA {
     protected Segment head = null;

@@ -1,6 +1,7 @@
 package fuun.piecetable;
 
 import fuun.Base;
+import fuun.utils.Buffer;
 
 public class Segment {
     private Buffer buffer;

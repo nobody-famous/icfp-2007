@@ -1,11 +1,10 @@
-package fuun.piecetable;
+package fuun.utils;
 
 import fuun.Base;
 
 public record Buffer(Base[] data, int first, int last) {
     public Buffer {
         if (data == null || first < 0 || last < 0 || last < first) {
-            System.out.println("***** BUFFER " + first + " " + last);
             throw new IllegalArgumentException();
         }
     }
