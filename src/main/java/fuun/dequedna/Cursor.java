@@ -4,9 +4,9 @@ import fuun.Base;
 import fuun.DNACursor;
 
 public class Cursor implements fuun.DNACursor {
-    private DequeDNA dna;
-    private int segIndex;
-    private int offset;
+    DequeDNA dna;
+    int segIndex;
+    int offset;
 
     Cursor(DequeDNA dna) {
         this.dna = dna;

@@ -35,8 +35,8 @@ public class DequeDNA implements fuun.DNA {
     public int length() {
         var result = 0;
 
-        for (var buffer : data) {
-            result += buffer.length();
+        for (var index = head; index != tail; index = wrap(index + 1)) {
+            result += data[index].length();
         }
 
         return result;
@@ -54,7 +54,18 @@ public class DequeDNA implements fuun.DNA {
 
     @Override
     public void truncate(DNACursor cursor) {
-        throw new RuntimeException("truncate not done yet");
+        var iter = (Cursor) cursor;
+
+        for (var index = head; index != iter.segIndex; index = wrap(index + 1)) {
+            data[index] = null;
+        }
+
+        if (iter.offset > data[head].last()) {
+            data[head] = null;
+            head = wrap(head + 1);
+        } else {
+            data[head] = new Buffer(data[head].data(), iter.offset, data[head].last());
+        }
     }
 
     @Override
