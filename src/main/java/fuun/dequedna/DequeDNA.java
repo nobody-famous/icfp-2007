@@ -1,7 +1,5 @@
 package fuun.dequedna;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.Iterator;
 
 import fuun.Base;
@@ -10,11 +8,22 @@ import fuun.DNACursor;
 import fuun.utils.Buffer;
 
 public class DequeDNA implements fuun.DNA {
-    private Deque<fuun.utils.Buffer> data = new ArrayDeque<>();
+    fuun.utils.Buffer[] data = new fuun.utils.Buffer[512];
+    int head = 0;
+    int tail = 0;
+
+    int wrap(int index) {
+        return index & (data.length - 1);
+    }
 
     @Override
     public void append(Base[] bases) {
-        data.add(new Buffer(bases, 0, bases.length - 1));
+        if (wrap(tail + 1) == head) {
+            throw new RuntimeException("append needs to resize");
+        }
+
+        data[tail] = new Buffer(bases, 0, bases.length - 1);
+        tail = wrap(tail + 1);
     }
 
     @Override

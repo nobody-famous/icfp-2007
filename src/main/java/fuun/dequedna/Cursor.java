@@ -50,12 +50,33 @@ public class Cursor implements fuun.DNACursor {
     }
 
     @Override
-    public Base peek(int offset) {
-        throw new RuntimeException("peek not done yet");
+    public Base peek(int count) {
+        var curOffset = this.offset;
+        var curSegIndex = segIndex;
+
+        while (dna.data[curSegIndex] != null && curOffset + count > dna.data[curSegIndex].length()) {
+            count -= dna.data[curSegIndex].length() - curOffset;
+            curOffset = 0;
+            curSegIndex = dna.wrap(curSegIndex + 1);
+        }
+
+        return dna.data[curSegIndex] != null
+                ? dna.data[curSegIndex].get(curOffset + count)
+                : Base.None;
     }
 
     @Override
-    public void skip(int offset) {
-        throw new RuntimeException("skip not done yet");
+    public void skip(int count) {
+        var loopCount = 0;
+
+        while (dna.data[segIndex] != null && offset + count > dna.data[segIndex].length()) {
+            fuun.Utils.checkLoopCount("skip", loopCount++);
+
+            count -= dna.data[segIndex].length() - offset;
+            offset = 0;
+            segIndex = dna.wrap(segIndex + 1);
+        }
+
+        offset += count;
     }
 }

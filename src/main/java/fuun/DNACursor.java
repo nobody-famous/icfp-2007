@@ -7,11 +7,11 @@ public interface DNACursor extends Iterator<Base> {
 
     Base peek();
 
-    Base peek(int offset);
+    Base peek(int count);
 
     Base next();
 
-    void skip(int offset);
+    void skip(int count);
 
     boolean isValid();
 

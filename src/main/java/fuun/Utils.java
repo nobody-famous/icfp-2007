@@ -11,8 +11,8 @@ public final class Utils {
     private Utils() {
     }
 
-    private static final int MAX_LOOP_COUNT = 100_000_000;
-    // private static final int MAX_LOOP_COUNT = 100;
+    // private static final int MAX_LOOP_COUNT = 100_000_000;
+    private static final int MAX_LOOP_COUNT = 100;
     public static final int SEGMENT_LIMIT = 500;
 
     public static DNA createDNA() {
