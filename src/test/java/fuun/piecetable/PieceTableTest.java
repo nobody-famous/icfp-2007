@@ -29,6 +29,14 @@ public class PieceTableTest {
         return table;
     }
 
+    private PieceTable createTable(String dna) {
+        var newTable = new PieceTable();
+
+        newTable.append(fuun.Utils.stringToBases(dna));
+
+        return newTable;
+    }
+
     @Test
     void testAppend() {
         var table = createIcfpTestTable();
@@ -37,10 +45,10 @@ public class PieceTableTest {
 
         table = new PieceTable();
 
-        table.append(fuun.Utils.stringToDNA("IIII"));
-        table.append(fuun.Utils.stringToDNA("CCCC"));
-        table.append(fuun.Utils.stringToDNA("FFFF"));
-        table.append(fuun.Utils.stringToDNA("PPPP"));
+        table.append(createTable("IIII"));
+        table.append(createTable("CCCC"));
+        table.append(createTable("FFFF"));
+        table.append(createTable("PPPP"));
         table.append(createIcfpTestTable());
 
         assertEquals("IIIICCCCFFFFPPPPICFPICFPICFP", table.toString());
@@ -50,15 +58,15 @@ public class PieceTableTest {
     void testPrepend() {
         var table = new PieceTable();
 
-        table.prepend(fuun.Utils.stringToDNA("PPPP"));
-        table.prepend(fuun.Utils.stringToDNA("FFFF"));
-        table.prepend(fuun.Utils.stringToDNA("CCCC"));
-        table.prepend(fuun.Utils.stringToDNA("IIII"));
+        table.prepend(createTable("PPPP"));
+        table.prepend(createTable("FFFF"));
+        table.prepend(createTable("CCCC"));
+        table.prepend(createTable("IIII"));
 
         assertEquals("IIIICCCCFFFFPPPP", table.toString());
 
         table = new PieceTable();
-        table.prepend(fuun.Utils.stringToDNA("ICFP"));
+        table.prepend(createTable("ICFP"));
 
         assertEquals("ICFP", table.toString());
     }

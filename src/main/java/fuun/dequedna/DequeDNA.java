@@ -72,4 +72,15 @@ public class DequeDNA implements fuun.DNA {
     public Iterator<Base> iterator() {
         return new Cursor(this);
     }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder();
+
+        for (var item : this) {
+            builder.append(item);
+        }
+
+        return builder.toString();
+    }
 }
