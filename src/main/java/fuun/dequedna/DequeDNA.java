@@ -67,17 +67,14 @@ public class DequeDNA implements fuun.DNA {
             throw new RuntimeException("prepend needs to resize");
         }
 
-        System.out.println("***** PREPEND BUF BEFORE " + this + " " + buf + " " + head);
         head = wrap(head - 1);
         data[head] = buf;
-        System.out.println("***** PREPEND BUF AFTER " + this + " " + head + " " + data[511]);
     }
 
     @Override
     public void prepend(DNA dna) {
         var deque = (DequeDNA) dna;
 
-        System.out.println("***** PREPEND " + dna);
         for (var index = deque.wrap(deque.tail - 1); index != deque.head; index = deque.wrap(index - 1)) {
             prepend(deque.data[index]);
         }
