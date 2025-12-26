@@ -57,9 +57,8 @@ public class Cursor implements fuun.DNACursor {
         var curOffset = this.offset;
         var curSegIndex = segIndex;
 
-        while (dna.data[curSegIndex] != null
-                && dna.data[curSegIndex].first() + curOffset + count > dna.data[curSegIndex].last()) {
-            count -= dna.data[curSegIndex].length() - curOffset;
+        while (dna.data[curSegIndex] != null && dna.data[curSegIndex].get(curOffset + count) == Base.None) {
+            count -= (dna.data[curSegIndex].length() - curOffset);
             curOffset = 0;
             curSegIndex = dna.wrap(curSegIndex + 1);
         }
@@ -73,17 +72,14 @@ public class Cursor implements fuun.DNACursor {
     public void skip(int count) {
         var loopCount = 0;
 
-        System.out.println("***** SKIP BEFORE " + segIndex + " " + count + " " + offset);
         while (dna.data[segIndex] != null && dna.data[segIndex].get(offset + count) == Base.None) {
             fuun.Utils.checkLoopCount("skip", loopCount++);
 
             count -= (dna.data[segIndex].length() - offset);
             segIndex = dna.wrap(segIndex + 1);
-            offset = dna.data[segIndex] != null ? dna.data[segIndex].first() : 0;
-            System.out.println("***** SKIP LOOP " + segIndex + " " + count + " " + offset);
+            offset = 0;
         }
 
         offset += count;
-        System.out.println("***** SKIP AFTER " + segIndex + " " + count + " " + offset);
     }
 }
