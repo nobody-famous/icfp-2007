@@ -118,6 +118,7 @@ public class DequeDNA implements fuun.DNA {
 
         for (var index = head; index != iter.segIndex; index = wrap(index + 1)) {
             data[index] = null;
+            head = wrap(index + 1);
         }
 
         if (data[head] == null) {
