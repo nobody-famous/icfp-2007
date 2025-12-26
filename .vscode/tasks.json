@@ -15,7 +15,7 @@
             "type": "shell",
             "command": "mvn",
             "linux": {
-                "args": ["clean", "-Dtest=TemplateDecoderTest", "test"]
+                "args": ["clean", "-Dtest=IntegrationTest", "test"]
             },
             "windows": {
                 "args": ["clean", "-Dtest='fuun.piecetable.PieceTableTest#testTruncate'", "test"]

@@ -17,4 +17,14 @@ public record Buffer(Base[] data, int first, int last) {
     public int length() {
         return last - first + 1;
     }
+
+    public String toString() {
+        var builder = new StringBuilder();
+
+        for (var index = first; index <= last; index++) {
+            builder.append(data[index]);
+        }
+
+        return builder.toString();
+    }
 }

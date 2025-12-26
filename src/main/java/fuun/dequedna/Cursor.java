@@ -10,7 +10,7 @@ public class Cursor implements fuun.DNACursor {
 
     Cursor(DequeDNA dna) {
         this.dna = dna;
-        this.segIndex = 0;
+        this.segIndex = dna.head;
         this.offset = 0;
     }
 
@@ -27,12 +27,15 @@ public class Cursor implements fuun.DNACursor {
 
     @Override
     public boolean hasNext() {
-        throw new RuntimeException("hasNext not done yet");
+        return dna.data[segIndex] != null && dna.data[segIndex].get(offset) != fuun.Base.None;
     }
 
     @Override
     public boolean isValid() {
-        throw new RuntimeException("isValid not done yet");
+        var curValid = dna.data[segIndex] != null && dna.data[segIndex].get(segIndex) != fuun.Base.None;
+        var prevValid = offset == 0 && dna.data[dna.wrap(segIndex - 1)] != null;
+
+        return curValid || prevValid;
     }
 
     @Override
@@ -69,12 +72,12 @@ public class Cursor implements fuun.DNACursor {
     public void skip(int count) {
         var loopCount = 0;
 
-        while (dna.data[segIndex] != null && offset + count > dna.data[segIndex].length()) {
+        while (dna.data[segIndex] != null && offset + count > dna.data[segIndex].last()) {
             fuun.Utils.checkLoopCount("skip", loopCount++);
 
             count -= dna.data[segIndex].length() - offset;
-            offset = 0;
             segIndex = dna.wrap(segIndex + 1);
+            offset = dna.data[segIndex] != null ? dna.data[segIndex].first() : 0;
         }
 
         offset += count;
