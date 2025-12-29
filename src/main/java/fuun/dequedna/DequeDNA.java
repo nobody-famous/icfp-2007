@@ -16,9 +16,33 @@ public class DequeDNA implements fuun.DNA {
         return index & (data.length - 1);
     }
 
+    private void collapse() {
+        // System.out.println("Collapsing deque of size " + length());
+        // Calculate total size
+        var size = 0;
+        for (var index = head; index != tail; index = wrap(index + 1)) {
+            size += data[index].length();
+        }
+
+        // Create single buffer with all data
+        var bases = new Base[size];
+        var offset = 0;
+        for (var index = head; index != tail; index = wrap(index + 1)) {
+            var buf = data[index];
+            System.arraycopy(buf.data(), buf.first(), bases, offset, buf.length());
+            offset += buf.length();
+            data[index] = null;
+        }
+
+        // Reset deque with single buffer
+        head = 0;
+        tail = 1;
+        data[0] = new Buffer(bases, 0, bases.length - 1);
+    }
+
     private void append(Buffer buf) {
         if (wrap(tail + 1) == head) {
-            throw new RuntimeException("append needs to resize");
+            collapse();
         }
 
         data[tail] = buf;
@@ -28,7 +52,7 @@ public class DequeDNA implements fuun.DNA {
     @Override
     public void append(Base[] bases) {
         if (wrap(tail + 1) == head) {
-            throw new RuntimeException("append needs to resize");
+            collapse();
         }
 
         if (bases.length == 0) {
@@ -41,9 +65,14 @@ public class DequeDNA implements fuun.DNA {
     @Override
     public void append(DNA dna) {
         var deque = (DequeDNA) dna;
+        var segments = new java.util.ArrayList<Buffer>();
 
         for (var index = deque.head; index != deque.tail; index = deque.wrap(index + 1)) {
-            append(deque.data[index]);
+            segments.add(deque.data[index]);
+        }
+
+        for (var buf : segments) {
+            append(buf);
         }
     }
 
@@ -64,7 +93,7 @@ public class DequeDNA implements fuun.DNA {
 
     private void prepend(Buffer buf) {
         if (wrap(head - 1) == tail) {
-            throw new RuntimeException("prepend needs to resize");
+            collapse();
         }
 
         head = wrap(head - 1);
@@ -75,11 +104,18 @@ public class DequeDNA implements fuun.DNA {
     public void prepend(DNA dna) {
         var deque = (DequeDNA) dna;
 
-        for (var index = deque.wrap(deque.tail - 1); index != deque.head; index = deque.wrap(index - 1)) {
-            prepend(deque.data[index]);
+        if (deque.head == deque.tail) {
+            return;
         }
 
-        prepend(deque.data[deque.head]);
+        var segments = new java.util.ArrayList<Buffer>();
+        for (var index = deque.head; index != deque.tail; index = deque.wrap(index + 1)) {
+            segments.add(deque.data[index]);
+        }
+
+        for (var i = segments.size() - 1; i >= 0; i--) {
+            prepend(segments.get(i));
+        }
     }
 
     @Override
@@ -99,14 +135,14 @@ public class DequeDNA implements fuun.DNA {
         }
 
         result.append(new Buffer(buf.data(), buf.first() + startCursor.offset, buf.last()));
-        for (var index = wrap(startCursor.segIndex + 1); index != tail; index = wrap(index + 1)) {
+        for (var index = wrap(startCursor.segIndex + 1); index != endCursor.segIndex; index = wrap(index + 1)) {
             buf = data[index];
+            result.append(buf);
+        }
 
-            if (index == wrap(tail - 1)) {
-                result.append(new Buffer(buf.data(), buf.first(), buf.first() + endCursor.offset));
-            } else {
-                result.append(buf);
-            }
+        if (startCursor.segIndex != endCursor.segIndex && endCursor.offset > 0) {
+            buf = data[endCursor.segIndex];
+            result.append(new Buffer(buf.data(), buf.first(), buf.first() + endCursor.offset - 1));
         }
 
         return result;

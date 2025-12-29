@@ -32,7 +32,7 @@ public class Cursor implements fuun.DNACursor {
 
     @Override
     public boolean isValid() {
-        var curValid = dna.data[segIndex] != null && dna.data[segIndex].get(segIndex) != fuun.Base.None;
+        var curValid = dna.data[segIndex] != null && dna.data[segIndex].get(offset) != fuun.Base.None;
         var prevValid = offset == 0 && dna.data[dna.wrap(segIndex - 1)] != null;
 
         return curValid || prevValid;
@@ -56,11 +56,18 @@ public class Cursor implements fuun.DNACursor {
     public Base peek(int count) {
         var curOffset = this.offset;
         var curSegIndex = segIndex;
+        var loopCount = 0;
 
         while (dna.data[curSegIndex] != null && dna.data[curSegIndex].get(curOffset + count) == Base.None) {
+            fuun.Utils.checkLoopCount("peek", loopCount++);
+
             count -= (dna.data[curSegIndex].length() - curOffset);
             curOffset = 0;
             curSegIndex = dna.wrap(curSegIndex + 1);
+            
+            if (curSegIndex == dna.tail) {
+                return Base.None;
+            }
         }
 
         return dna.data[curSegIndex] != null
@@ -78,6 +85,10 @@ public class Cursor implements fuun.DNACursor {
             count -= (dna.data[segIndex].length() - offset);
             segIndex = dna.wrap(segIndex + 1);
             offset = 0;
+
+            if (segIndex == dna.tail) {
+                break;
+            }
         }
 
         offset += count;

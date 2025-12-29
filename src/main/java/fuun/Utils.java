@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import fuun.dequedna.DequeDNA;
-
 public final class Utils {
     private Utils() {
     }
@@ -17,9 +15,9 @@ public final class Utils {
 
     public static DNA createDNA() {
         // return new TableDNA();
-        // return new fuun.piecetable.PieceTable();
+        return new fuun.piecetable.PieceTable();
         // return new StringDNA();
-        return new DequeDNA();
+        // return new DequeDNA();
     }
 
     public static DNA createDNA(Base[] bases) {
