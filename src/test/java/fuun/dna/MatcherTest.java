@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import fuun.Base;
+import fuun.Utils;
 
 public class MatcherTest {
     private void runTest(String input, Pattern pattern, boolean shouldMatch, String expectedDNA,
@@ -26,14 +27,9 @@ public class MatcherTest {
 
     @Test
     void testBases() {
-        runTest("ICFP",
-                new Pattern()
-                        .add(new Pattern.Base(new fuun.Base[] { fuun.Base.I, fuun.Base.C, fuun.Base.F, fuun.Base.P })),
-                true, "", new ArrayList<>());
-        runTest("ICFP",
-                new Pattern()
-                        .add(new Pattern.Base(new fuun.Base[] { fuun.Base.I, fuun.Base.F, fuun.Base.F, fuun.Base.P })),
-                false, "ICFP", new ArrayList<>());
+        runTest("ICFP", new Pattern().add(new Pattern.Base(Utils.stringToBases("ICFP"))), true, "", new ArrayList<>());
+        runTest("ICFP", new Pattern().add(new Pattern.Base(Utils.stringToBases("IFFP"))), false, "ICFP",
+                new ArrayList<>());
     }
 
     @Test
@@ -47,13 +43,12 @@ public class MatcherTest {
 
     @Test
     void testSearch() {
-        runTest("ICFP", new Pattern().add(new Pattern.Search(new Base[] { fuun.Base.F, fuun.Base.P })), true, "",
+        runTest("ICFP", new Pattern().add(new Pattern.Search(Utils.stringToBases("FP"))), true, "", new ArrayList<>());
+        runTest("ICFP", new Pattern().add(new Pattern.Search(Utils.stringToBases("ICF"))), true, "P",
                 new ArrayList<>());
-        runTest("ICFP", new Pattern().add(new Pattern.Search(new Base[] { fuun.Base.I, fuun.Base.C, fuun.Base.F })),
-                true, "P", new ArrayList<>());
-        runTest("ICFP", new Pattern().add(new Pattern.Search(new Base[] { fuun.Base.I })), true, "CFP",
+        runTest("ICFP", new Pattern().add(new Pattern.Search(Utils.stringToBases("I"))), true, "CFP",
                 new ArrayList<>());
-        runTest("ICFP", new Pattern().add(new Pattern.Search(new Base[] { fuun.Base.F, fuun.Base.F })), false, "ICFP",
+        runTest("ICFP", new Pattern().add(new Pattern.Search(Utils.stringToBases("FF"))), false, "ICFP",
                 new ArrayList<>());
     }
 
