@@ -51,9 +51,9 @@ public class App {
 
     private static void execute(fuun.DNA dna) {
         var iteration = 0;
+        var startTime = System.nanoTime();
 
         try {
-            var startTime = System.nanoTime();
 
             for (iteration = 0; iteration < MAX_ITERATIONS; iteration += 1) {
                 if (doDebugPrint(iteration)) {
@@ -89,7 +89,7 @@ public class App {
                 }
             }
         } catch (Finished ex) {
-            System.out.println("Finished called after " + iteration);
+            System.out.println("Finished called after " + iteration + " iterations, " + getDuration(startTime) + " ms");
         }
     }
 }
