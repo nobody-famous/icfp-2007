@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import fuun.Base;
 import fuun.Utils;
 
 public class MatcherTest {
